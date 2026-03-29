@@ -46,6 +46,7 @@ build/
 frontend/node_modules/
 frontend/node/
 frontend/dist/
+frontend/.angular/
 
 ### Cartelle old/backup ###
 frontend_old/
