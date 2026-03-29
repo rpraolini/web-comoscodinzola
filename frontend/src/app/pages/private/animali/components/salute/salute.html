@@ -1,0 +1,251 @@
+<div class="grid p-fluid">
+
+    <!-- TOOLBAR -->
+    <div class="col-12">
+        <div class="flex justify-content-between align-items-center mb-3">
+            <span class="text-900 font-bold text-lg">
+                <i class="pi pi-heart mr-2 text-primary"></i>Salute
+            </span>
+            <p-button label="Nuovo evento" icon="pi pi-plus" severity="primary" (onClick)="apriNuovo()">
+            </p-button>
+        </div>
+    </div>
+
+    <!-- EVENTI RAGGRUPPATI PER CATEGORIA -->
+    @if (eventi.length > 0) {
+    <div class="col-12">
+        <p-accordion [multiple]="true">
+            @for (cat of categorie; track cat.id_tipo_evento_clinico) {
+            @let gruppo = eventiPerCategoria(cat.id_tipo_evento_clinico);
+            @if (gruppo.length > 0) {
+            <p-accordion-panel [value]="cat.id_tipo_evento_clinico">
+
+                <p-accordion-header>
+                    <div class="flex align-items-center gap-2">
+                        <div class="border-circle w-1rem h-1rem flex-shrink-0"
+                            [style.background-color]="cat.colore || '#6366f1'"></div>
+                        <span class="font-bold">{{cat.evento_clinico}}</span>
+                        <p-tag [value]="gruppo.length.toString()" severity="secondary"
+                            styleClass="text-xs ml-2"></p-tag>
+                    </div>
+                </p-accordion-header>
+
+                <p-accordion-content>
+                    <div class="grid pt-2">
+                        @for (evento of gruppo; track evento.id_evento) {
+                        <div class="col-12 md:col-6 lg:col-4">
+                            <div class="surface-card border-round shadow-1 p-3 h-full flex flex-column gap-2"
+                                [style.border-left]="'3px solid ' + (cat.colore || '#6366f1')">
+
+                                <!-- Header card -->
+                                <div class="flex justify-content-between align-items-start">
+                                    <div class="flex flex-column gap-1">
+                                        <span class="font-bold text-900">{{evento.evento}}</span>
+                                        <div class="flex gap-3 text-xs text-500">
+                                            <span><i class="pi pi-calendar mr-1"></i>{{evento.dt_evento}}</span>
+                                            @if (evento.dt_richiamo) {
+                                            <span>
+                                                <i class="pi pi-refresh mr-1 text-orange-400"></i>
+                                                Richiamo: {{evento.dt_richiamo}}
+                                            </span>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-1">
+                                        <p-button icon="pi pi-pencil" [text]="true" severity="secondary" size="small"
+                                            pTooltip="Modifica" (onClick)="apriModifica(evento)">
+                                        </p-button>
+                                        <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small"
+                                            pTooltip="Elimina" (onClick)="elimina(evento)">
+                                        </p-button>
+                                    </div>
+                                </div>
+
+                                <!-- Note tipo evento -->
+                                @if (evento.note_tipo_evento) {
+                                <div class="text-xs text-500 font-italic border-left-2 border-primary pl-2">
+                                    {{evento.note_tipo_evento}}
+                                </div>
+                                }
+
+                                <!-- Note -->
+                                @if (evento.note) {
+                                <div class="text-sm text-600 surface-50 border-round p-2">
+                                    <i class="pi pi-comment mr-1 text-primary"></i>{{evento.note}}
+                                </div>
+                                }
+
+                                <!-- Documenti -->
+                                @if (evento.documenti?.length > 0) {
+                                <div class="border-top-1 surface-border pt-2 mt-1">
+                                    <div class="text-xs font-bold text-500 uppercase mb-2">Documenti</div>
+                                    <div class="flex flex-column gap-1">
+                                        @for (doc of evento.documenti; track doc.id_documento) {
+                                        <div class="flex align-items-center justify-content-between
+                                            p-2 surface-50 border-round border-1 surface-border text-xs">
+                                            <div class="flex align-items-center gap-2">
+                                                <i class="pi pi-file-pdf text-red-400"></i>
+                                                <span>{{doc.assoFiles?.[0]?.filename || 'Documento'}}</span>
+                                            </div>
+
+                                            <div class="flex gap-1">
+                                                <p-button icon="pi pi-download" [text]="true" severity="primary"
+                                                    size="small" pTooltip="Scarica"
+                                                    (onClick)="downloadDocumento(doc.assoFiles?.[0])">
+                                                </p-button>
+                                                <p-button icon="pi pi-trash" [text]="true" severity="danger"
+                                                    size="small" pTooltip="Elimina"
+                                                    (onClick)="eliminaDocumento(doc.id_documento)">
+                                                </p-button>
+                                            </div>
+                                        </div>
+                                        }
+                                    </div>
+                                </div>
+                                }
+
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </p-accordion-content>
+
+            </p-accordion-panel>
+            }
+            }
+        </p-accordion>
+    </div>
+    } @else {
+    <div class="col-12">
+        <div class="text-center p-6 surface-card border-round shadow-1 text-500">
+            <i class="pi pi-heart text-300 text-5xl mb-3 block"></i>
+            <span class="text-sm">Nessun evento clinico registrato per questo animale.</span>
+        </div>
+    </div>
+    }
+
+</div>
+
+<!-- DIALOG NUOVO / MODIFICA -->
+<p-dialog [header]="isModifica ? 'Modifica Evento Clinico' : 'Nuovo Evento Clinico'" [(visible)]="displayDialog"
+    [modal]="true" [style]="{width: '550px'}" [draggable]="false">
+
+    <div class="flex flex-column gap-4 pt-2">
+
+        <div class="flex flex-column gap-1">
+            <label class="text-xs font-bold text-500 uppercase">Tipo evento *</label>
+            <p-select [options]="tipiEvento" [(ngModel)]="eventoCorrente.id_tipo_evento" optionLabel="evento"
+                optionValue="id_tipo_evento" placeholder="Seleziona tipo evento..." [filter]="true" styleClass="w-full"
+                appendTo="body">
+                <ng-template let-item pTemplate="item">
+                    <div class="flex flex-column">
+                        <span class="font-bold">{{item.evento}}</span>
+                        <small class="text-500">{{item.evento_clinico}}</small>
+                    </div>
+                </ng-template>
+            </p-select>
+        </div>
+
+        <div class="grid p-fluid">
+            <div class="col-6">
+                <label class="text-xs font-bold text-500 uppercase block mb-1">Data evento *</label>
+                <p-datepicker [(ngModel)]="eventoCorrente.dt_evento" dateFormat="dd/mm/yy" [showIcon]="true"
+                    appendTo="body">
+                </p-datepicker>
+            </div>
+            <div class="col-6">
+                <label class="text-xs font-bold text-500 uppercase block mb-1">Data richiamo</label>
+                <p-datepicker [(ngModel)]="eventoCorrente.dt_richiamo" dateFormat="dd/mm/yy" [showIcon]="true"
+                    appendTo="body">
+                </p-datepicker>
+            </div>
+        </div>
+
+        <div class="flex flex-column gap-1">
+            <label class="text-xs font-bold text-500 uppercase">Note</label>
+            <textarea pInputTextarea [(ngModel)]="eventoCorrente.note" [rows]="3"
+                placeholder="Note sull'evento clinico..." class="w-full" style="resize: vertical;">
+      </textarea>
+        </div>
+
+        <!-- Sezione documenti (solo in modifica) -->
+        <!-- Sezione documenti — solo in modifica -->
+        @if (isModifica) {
+        <div class="flex flex-column gap-2 border-top-1 surface-border pt-3">
+            <div class="text-xs font-bold text-500 uppercase">Documenti allegati</div>
+
+            <!-- Lista documenti esistenti -->
+            @if (eventoCorrente.documenti?.length > 0) {
+            <div class="flex flex-column gap-1 mb-2">
+                @for (doc of eventoCorrente.documenti; track doc.id_documento) {
+                <div class="flex align-items-center justify-content-between
+            p-2 surface-50 border-round border-1 surface-border text-sm">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-file-pdf text-red-400"></i>
+                        <span>{{doc.assoFiles?.[0]?.filename || 'Documento'}}</span>
+                        <small class="text-500">{{doc.tipoDocumento?.documento}}</small>
+                    </div>
+                    <div class="flex gap-1">
+                        <p-button icon="pi pi-download" [text]="true" severity="primary" size="small" pTooltip="Scarica"
+                            (onClick)="downloadDocumento(doc.assoFiles?.[0])">
+                        </p-button>
+                        <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small" pTooltip="Elimina"
+                            (onClick)="eliminaDocumento(doc.id_documento)">
+                        </p-button>
+                    </div>
+                </div>
+                }
+            </div>
+            } @else {
+            <span class="text-xs text-500 font-italic">Nessun documento allegato.</span>
+            }
+
+            <!-- Upload nuovo documento -->
+            <div class="flex flex-column gap-2 p-3 surface-50 border-round border-1 surface-border">
+                <div class="text-xs font-bold text-600">Aggiungi documento</div>
+                <div class="flex gap-2 align-items-end flex-wrap">
+
+                    <div class="flex flex-column gap-1 flex-1" style="min-width: 160px">
+                        <label class="text-xs text-500">Tipo documento</label>
+                        <p-select [options]="tipiDocumento" [(ngModel)]="tipoDocSelezionato" optionLabel="documento"
+                            placeholder="Seleziona..." appendTo="body" styleClass="w-full">
+                        </p-select>
+                    </div>
+
+                    <div class="flex flex-column gap-1">
+                        <label class="text-xs text-500">File</label>
+                        <input #fileDocInput type="file" style="display:none" (change)="onFileDocChange($event)" />
+                        <p-button [label]="fileDocumento ? fileDocumento.name : 'Scegli file'" icon="pi pi-paperclip"
+                            [outlined]="true" [severity]="fileDocumento ? 'success' : 'secondary'" size="small"
+                            (onClick)="fileDocInput.click()">
+                        </p-button>
+                    </div>
+
+                    <p-button label="Carica" icon="pi pi-upload" severity="primary" size="small"
+                        [loading]="uploadingDoc" [disabled]="!fileDocumento || !tipoDocSelezionato"
+                        (onClick)="uploadDocumento()">
+                    </p-button>
+
+                </div>
+            </div>
+        </div>
+        }
+
+
+        <!-- fine documenti-->
+
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="flex justify-content-end gap-2">
+            <p-button label="Annulla" [text]="true" severity="secondary" (onClick)="displayDialog = false">
+            </p-button>
+            <p-button label="Salva" icon="pi pi-save" severity="primary" [loading]="saving" (onClick)="salva()">
+            </p-button>
+        </div>
+    </ng-template>
+
+</p-dialog>
+
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>

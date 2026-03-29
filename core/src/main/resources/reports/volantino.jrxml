@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final utlizzo versione della libreria JasperReports6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="volantino" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="d916c447-6dcf-4a5c-81e5-3d09ccd0f2eb">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="mysql-asso"/>
+	<parameter name="id" class="java.lang.String"/>
+	<parameter name="path_url" class="java.lang.String"/>
+	<parameter name="logo_url" class="java.lang.String"/>
+	<parameter name="qrcode_url" class="java.lang.String"/>
+	<parameter name="sito" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+  v.nome,
+  Replace(Replace(v.etaS, "a", "anni"), "m", "mesi") etaS,
+  Lower(v.taglia) taglia,
+  v.descr_colore,
+  CASE
+    WHEN v.sesso = 'M'
+    THEN "maschio"
+    ELSE "femmina"
+  END sesso,
+  Concat(Lower(v.tipo_razza), "  ", Lower(v.razza)) razza,
+  Concat(v.id_animale, "/", f.nome_file) url,
+  c.provincia localita,
+  CASE
+    WHEN v.eta = 'CUCCIOLO'
+    THEN Concat("da grande peserò circa ", v.peso, " Kg.")
+    ELSE Concat("peso ", v.peso, " Kg.")
+  END peso,
+ ifnull((select Concat(" e ",x.note) from an_r_caratteri x where x.id_animale = v.id_animale and (x.id_carattere = 0 or x.id_carattere is null)),"") note,
+ CASE WHEN c.provincia = 'Benevento' THEN 'nel centro nord.' ELSE 'anche nelle province limitrofe.' END luogo
+FROM
+  v_animali v
+  INNER JOIN an_foto f ON v.id_animale = f.id_animale
+  INNER JOIN v_last_eventi_storici ve ON ve.id_animale = v.id_animale
+  INNER JOIN an_contatti c ON c.id_contatto = ve.id_contatto
+WHERE
+  f.id_tipo_foto = 1 AND
+  f.pubblica = 1 AND
+  v.id_animale =  $P{id}]]>
+	</queryString>
+	<field name="nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_animale"/>
+	</field>
+	<field name="etaS" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="etaS"/>
+	</field>
+	<field name="taglia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="taglia"/>
+	</field>
+	<field name="descr_colore" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="descr_colore"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_x_colore"/>
+	</field>
+	<field name="sesso" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sesso"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_animale"/>
+	</field>
+	<field name="razza" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="razza"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_x_razze"/>
+	</field>
+	<field name="url" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="url"/>
+	</field>
+	<field name="localita" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="localita"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="peso" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="peso"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_animale"/>
+	</field>
+	<field name="note" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="note"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_r_caratteri"/>
+	</field>
+	<field name="luogo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="luogo"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="441" splitType="Stretch">
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="20" y="35" width="331" height="255" uuid="87a582ae-23a8-48d6-816b-7cd00db62e7a"/>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="453" y="35" width="331" height="255" uuid="d221ea3b-4074-459a-a40a-c042941397eb"/>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="20" y="-7" width="331" height="40" uuid="96b3d8d0-c8bf-42a6-ab6b-4f493ab38e1f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[CONCATENATE( "Io sono ", UPPER($F{nome} ))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="453" y="-7" width="331" height="40" uuid="157a5ff3-f12c-4664-81ca-3b7ea672f917"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[CONCATENATE( "Io sono ", UPPER($F{nome} ))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2" y="291" width="358" height="128" uuid="73157903-ba70-47da-85b9-2b986894ccb2"/>
+				<textElement>
+					<font fontName="SansSerif" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($F{peso} == null,CONCATENATE("Ho ",$F{etaS}," e  mi trovo in provincia di ",$F{localita}," ma cerco casa ", $F{luogo}, "\nSono ",$F{sesso},$F{note},". Ho tutti i vaccini e il microchip. Chiama per me!"),CONCATENATE("Ho ",$F{etaS}," e  ",$F{peso}," Mi trovo in provincia di ",$F{localita}," ma cerco casa ", $F{luogo}, "\nSono ",$F{sesso},$F{note},". Ho tutti i vaccini e il microchip. Chiama per me!"))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="434" y="291" width="360" height="128" uuid="3cb90e9a-bf3b-4332-9188-b8e82182bb6e"/>
+				<textElement>
+					<font fontName="SansSerif" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($F{peso} == null,CONCATENATE("Ho ",$F{etaS}," e  mi trovo in provincia di ",$F{localita}," ma cerco casa ", $F{luogo}, "\nSono ",$F{sesso},$F{note},". Ho tutti i vaccini e il microchip. Chiama per me!"),CONCATENATE("Ho ",$F{etaS}," e  ",$F{peso}," Mi trovo in provincia di ",$F{localita}," ma cerco casa ", $F{luogo}, "\nSono ",$F{sesso},$F{note},". Ho tutti i vaccini e il microchip. Chiama per me!"))]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="398" y="0" width="1" height="441" uuid="706a8125-028d-40ca-b6ff-70e9a1324f9a"/>
+			</line>
+			<image>
+				<reportElement x="402" y="-7" width="61" height="61" uuid="a2c2ac90-1d9d-448d-a062-868f30ad903d"/>
+				<imageExpression><![CDATA[$P{logo_url}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="-11" y="-7" width="61" height="61" uuid="b7edd722-540a-41f5-be2e-9d0405f82db7"/>
+				<imageExpression><![CDATA[$P{logo_url}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="0" y="420" width="361" height="21" uuid="be1da6dd-e74a-4586-aa61-ba6b1c87cacd"/>
+				<textElement textAlignment="Center">
+					<font size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{sito}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="434" y="420" width="361" height="21" uuid="f6c6b51c-1d2b-473e-adc4-65dd5148cb42"/>
+				<textElement textAlignment="Center">
+					<font size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{sito}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="330" y="-7" width="61" height="61" uuid="bb5e9426-b831-43e2-baa8-a51b16441a15"/>
+				<imageExpression><![CDATA[$P{qrcode_url}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="757" y="-7" width="61" height="61" uuid="8ffd9eee-815a-4e8a-a56d-3c83289505ee"/>
+				<imageExpression><![CDATA[$P{qrcode_url}]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="5" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="109" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="40" height="70" uuid="083482bd-82d8-458a-92a9-459536dea5d2"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" rotation="Left">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[3470186913 Barbara]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="0" width="40" height="70" uuid="029cac64-c79e-4ce7-81eb-3373ca979bcf"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" rotation="Left">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[3463223576 Lucia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="0" width="40" height="70" uuid="1b91bbc0-e07b-4603-9c50-a090e83e073b"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" rotation="Left">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[3479253911 Federica]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="0" width="40" height="70" uuid="98a25836-324c-44a1-8d72-4e784f1a92b1"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" rotation="Left">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[3470186913 Barbara]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="0" width="40" height="70" uuid="e46df3be-6b7d-4837-b281-75f83bb4c85a"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" rotation="Left">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[3463223576 Lucia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="40" height="70" uuid="703c8d20-3541-45af-8833-dd9cbe434264"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" rotation="Left">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[3479253911 Federica]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="240" y="0" width="40" height="70" uuid="d5b75de1-ab15-438d-a92b-dad090d7893a"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" rotation="Left">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[3470186913 Barbara]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="0" width="40" height="70" uuid="27e4ca5b-3207-499d-bbe0-174da72e5e3b"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" rotation="Left">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[3463223576 Lucia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="0" width="40" height="70" uuid="6266816c-3278-4e7b-9065-f253470e0f3c"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" rotation="Left">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[3479253911 Federica]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="434" y="0" width="40" height="70" uuid="0bc61e13-acf0-420d-85b3-dd4eef6cdb79"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" rotation="Left">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[3470186913 Barbara]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="474" y="0" width="40" height="70" uuid="228fb05d-9604-4665-aa63-6cba6d545dfd"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" rotation="Left">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[3463223576 Lucia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="514" y="0" width="40" height="70" uuid="5ed7db91-d8cb-4629-bbd5-fd2735179d6a"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" rotation="Left">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[3479253911 Federica]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="554" y="0" width="40" height="70" uuid="de4f26cb-a22b-4eeb-b501-d2422b081cb6"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" rotation="Left">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[3470186913 Barbara]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="594" y="0" width="40" height="70" uuid="24b97b91-aa03-4dd2-b827-48c685abd49d"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" rotation="Left">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[3463223576 Lucia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="634" y="0" width="40" height="70" uuid="227a30dc-e31b-4c4c-bb20-7cde818e62ec"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" rotation="Left">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[3479253911 Federica]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="674" y="0" width="40" height="70" uuid="6167e113-c9bc-4a4e-9a36-c3d01eea5004"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" rotation="Left">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[3470186913 Barbara]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="714" y="0" width="40" height="70" uuid="d9c99a9d-a062-45a2-9d3a-0d50d476f686"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" rotation="Left">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[3463223576 Lucia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="754" y="0" width="40" height="70" uuid="147728b4-3c95-4cf4-a6fe-e936efa4b000"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" rotation="Left">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[3479253911 Federica]]></text>
+			</staticText>
+			<line>
+				<reportElement x="398" y="0" width="1" height="109" uuid="65e48032-192a-4064-a2c1-4613fb36a717"/>
+			</line>
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="0" y="70" width="40" height="39" uuid="568c6934-9dcc-46bb-836c-10193fa9d5f9"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="40" y="70" width="40" height="39" uuid="f53ee9a3-01e8-4bd6-a396-54d11c49b1ba"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="80" y="70" width="40" height="39" uuid="8b1f6655-23ce-46e9-b615-7b8919e7bb67"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="120" y="70" width="40" height="39" uuid="4377d32f-0dc1-4631-8676-74052446b529"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="160" y="70" width="40" height="39" uuid="242140a9-9ebc-434c-b482-e8fdb1be985e"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="200" y="70" width="40" height="39" uuid="aee620ca-288b-46a8-8033-a72ebdad61cf"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="240" y="70" width="40" height="39" uuid="0f9ae4b8-0cf7-4d75-954d-eeca9682c577"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="280" y="70" width="40" height="39" uuid="be2106c9-0c46-43ad-b3f3-a76a6fb1d9d5"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="320" y="70" width="40" height="39" uuid="9875fcdb-cae5-44d3-a5e4-68e72c454e17"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="434" y="70" width="40" height="39" uuid="d36bec5e-bfef-4626-8ed4-090401e91cf4"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="474" y="70" width="40" height="39" uuid="20461cb2-ad5a-40bb-ac45-ece42aa4ce8b"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="514" y="70" width="40" height="39" uuid="3ab32eca-4305-468f-98e2-d9cc02ad8644"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="554" y="70" width="40" height="39" uuid="75a31878-b178-4834-aeff-7c2de411ecde"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="594" y="70" width="40" height="39" uuid="e59734ed-86ea-4854-9ad3-0f5656e5cb93"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="634" y="70" width="40" height="39" uuid="3cff4c87-8352-4ac3-ab8b-9fd87f5a155e"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="674" y="70" width="40" height="39" uuid="2099252f-450e-40a4-897e-b91d110daaa5"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="714" y="70" width="40" height="39" uuid="9d3b989f-30e0-49a6-b148-04d5b79d7b93"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement stretchType="ContainerHeight" x="754" y="70" width="40" height="39" uuid="ed1d0cea-e63f-4135-a7ae-0fa8b1728e9a"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{path_url} + $F{url}]]></imageExpression>
+			</image>
+		</band>
+	</pageFooter>
+</jasperReport>

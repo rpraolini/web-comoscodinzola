@@ -1,0 +1,143 @@
+<app-public-header></app-public-header>
+
+<div class="surface-ground min-h-screen pb-8">
+    
+    <div *ngIf="loading" class="flex justify-content-center align-items-center" style="height: 50vh;">
+        <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
+    </div>
+
+    <div *ngIf="!loading && animale" class="mx-auto w-full pt-6 px-4 md:px-6" style="max-width: 1200px;">
+        
+        <button pButton icon="pi pi-arrow-left" label="Torna alla ricerca" 
+                class="p-button-text mb-4" (click)="goBack()"></button>
+
+        <div class="grid">
+            
+            <div class="col-12 lg:col-6 mb-5 lg:mb-0">
+                <div class="surface-card p-3 shadow-2 border-round">
+                    
+                    <div *ngIf="galleryImages.length > 0 && galleryImages[activeIndex]" class="mb-2 border-round overflow-hidden surface-border border-1" style="height: 450px;">
+                        <img [src]="galleryImages[activeIndex].url" 
+                             [alt]="galleryImages[activeIndex].didascalia" 
+                             style="width: 100%; height: 100%; object-fit: cover; cursor: zoom-in;" 
+                             (click)="displayFullScreen = true" />
+                    </div>
+
+                    <div *ngIf="galleryImages.length > 1" class="flex gap-2 overflow-x-auto py-2 w-full custom-scrollbar">
+                        <div *ngFor="let item of galleryImages; let i = index" 
+                             class="flex-shrink-0 cursor-pointer transition-duration-200 border-round"
+                             style="width: 85px; height: 65px;"
+                             (click)="selezionaFoto(item)">
+                             
+                            <img [src]="item.url" 
+                                 class="border-round w-full h-full"
+                                 style="object-fit: cover;"
+                                 [ngClass]="{
+                                     'border-2 border-primary shadow-2': activeIndex === i, 
+                                     'border-1 surface-border opacity-60 hover:opacity-100': activeIndex !== i
+                                 }" />
+                        </div>
+                    </div>
+
+                    <div *ngIf="displayFullScreen" 
+                        class="fixed top-0 left-0 w-screen h-screen flex align-items-center justify-content-center"
+                        style="z-index: 9999; background-color: rgba(0,0,0,0.92);">
+
+                        <i class="pi pi-times text-white absolute top-0 right-0 m-4 cursor-pointer hover:text-gray-300 transition-colors transition-duration-200" 
+                        style="font-size: 2rem;"
+                        (click)="displayFullScreen = false">
+                        </i>
+
+                        <i *ngIf="activeIndex > 0"
+                        class="pi pi-angle-left text-white absolute left-0 ml-3 md:ml-5 cursor-pointer hover:text-gray-300 transition-colors transition-duration-200"
+                        style="font-size: 4rem;"
+                        (click)="activeIndex = activeIndex - 1">
+                        </i>
+
+                        <img [src]="galleryImages[activeIndex].url" 
+                            [alt]="galleryImages[activeIndex].didascalia" 
+                            style="max-width: 85vw; max-height: 85vh; object-fit: contain; border-radius: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);" />
+
+                        <i *ngIf="activeIndex < galleryImages.length - 1"
+                        class="pi pi-angle-right text-white absolute right-0 mr-3 md:mr-5 cursor-pointer hover:text-gray-300 transition-colors transition-duration-200"
+                        style="font-size: 4rem;"
+                        (click)="activeIndex = activeIndex + 1">
+                        </i>
+
+                    </div>
+
+                </div>
+
+                <div class="surface-card p-4 shadow-2 border-round mt-4">
+                    <ul class="list-none p-0 m-0 text-900">
+                         <li class="flex justify-content-between mb-3 border-bottom-1 surface-border pb-2">
+                            <span class="text-600">Sesso</span>
+                            <span class="font-bold">
+                                <i [class]="animale.sesso === 'M' ? 'pi pi-mars text-blue-500' : 'pi pi-venus text-pink-500'"></i>
+                                {{ animale.sesso === 'M' ? ' Maschio' : ' Femmina' }}
+                            </span>
+                        </li>
+                        <li class="flex justify-content-between mb-3 border-bottom-1 surface-border pb-2">
+                            <span class="text-600">Età</span>
+                            <span>{{ animale.eta }} ({{ animale.dt_nascita }})</span>
+                        </li>
+                         <li class="flex justify-content-between">
+                            <span class="text-600">Posizione</span>
+                            <span><i class="pi pi-map-marker text-red-500 mr-1"></i>{{ animale.location }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-12 lg:col-6 lg:pl-6">
+                
+                <div class="flex align-items-center justify-content-between">
+                    <h1 class="text-900 font-bold text-5xl mb-2 mt-0">{{ animale.nome }}</h1>
+                    <p-tag [value]="animale.descr_stato" 
+                        [style]="{'background-color': animale.coloreStato, 'color': '#ffffff'}" 
+                        styleClass="text-lg font-bold px-3 py-2 shadow-1">
+                    </p-tag>
+                </div>
+                <div class="text-xl text-primary font-medium mb-5">{{ animale.razza || 'Meticcio' }}</div>
+
+                <div *ngIf="notaCarattere" class="bg-blue-50 border-left-3 border-blue-500 p-4 mb-5 border-round-right">
+                    <div class="flex align-items-center mb-2">
+                        <i class="pi pi-info-circle text-blue-500 text-xl mr-2"></i>
+                        <span class="font-bold text-blue-700">Il volontario dice di me:</span>
+                    </div>
+                    <div class="font-italic text-800 line-height-3">"{{ notaCarattere }}"</div>
+                </div>
+
+                <div class="surface-card p-5 shadow-2 border-round mb-5">
+                    <h3 class="text-900 font-bold text-xl mb-3">La sua storia</h3>
+                    <p class="line-height-3 text-lg text-700 whitespace-pre-line">
+                        {{ animale.descr_lunga || animale.descr_breve || 'Nessuna storia disponibile.' }}
+                    </p>
+                </div>
+
+                <div *ngIf="caratteri.length > 0" class="mb-5">
+                    <h3 class="text-900 font-bold text-xl mb-3">Il suo carattere</h3>
+                    <div class="grid">
+                        <div class="col-12 md:col-6" *ngFor="let c of caratteri">
+                            <div class="surface-card p-3 shadow-1 border-round flex align-items-center h-full border-left-2 border-primary-500">
+                                <div class="bg-primary-50 text-primary border-circle w-3rem h-3rem flex align-items-center justify-content-center mr-3 flex-shrink-0">
+                                    <i [class]="getIconClass(c.icona) + ' text-xl'"></i>
+                                </div>
+                                <div>
+                                    <div class="text-500 text-xs font-bold uppercase mb-1">{{ c.contesto }}</div>
+                                    <div class="text-900 font-medium">{{ c.carattere }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="surface-50 p-5 border-round-xl border-2 border-primary-100 flex flex-column align-items-center text-center gap-3">
+                    <div class="text-2xl font-bold text-900">Vorresti adottare {{ animale.nome }}?</div>
+                    <button pButton label="Invia richiesta di adozione" icon="pi pi-envelope" size="large" class="w-full md:w-auto"></button>
+                </div> -->
+                
+            </div>
+        </div>
+    </div>
+</div>

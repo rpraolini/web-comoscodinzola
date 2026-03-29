@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final utlizzo versione della libreria JasperReports6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="raccolto" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="61c52e92-c099-4a73-bbed-20676e633faf">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="mysql-asso"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="324"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="662"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="raccolto" uuid="444f9dd1-8557-4ae6-b702-eed076f241a5">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="mysql-asso"/>
+		<parameter name="id_e" class="java.lang.String"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT
+  a.id_evento,
+  b.descrizione,
+  b.tipo_merce,
+  c.descr_tipo_animale,
+  a.quantita,
+  a.peso
+FROM
+  rc_r_evento_merce a
+  INNER JOIN rc_x_merceologia b ON a.id_merce = b.id_merce
+  INNER JOIN an_x_tipo_animale c ON b.id_tipo_animale = c.id_tipo_animale
+WHERE
+  a.id_evento =  $P{id_e}
+ORDER BY
+  b.descrizione]]>
+		</queryString>
+		<field name="id_evento" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="id_evento"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="rc_r_evento_merce"/>
+		</field>
+		<field name="descrizione" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="descrizione"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="rc_x_merceologia"/>
+		</field>
+		<field name="tipo_merce" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="tipo_merce"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="rc_x_merceologia"/>
+		</field>
+		<field name="descr_tipo_animale" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="descr_tipo_animale"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="an_x_tipo_animale"/>
+		</field>
+		<field name="quantita" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="quantita"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="rc_r_evento_merce"/>
+		</field>
+		<field name="peso" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="peso"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="rc_r_evento_merce"/>
+		</field>
+	</subDataset>
+	<parameter name="id" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+  a.id_evento,
+  a.dt_evento,
+  b.rag_sociale,
+  b.indirizzo,
+  b.comune,
+  b.provincia,
+  b.orario_apertura
+FROM
+  rc_evento a
+  INNER JOIN an_contatti b ON a.id_punto_raccolta = b.id_contatto
+  WHERE a.id_evento = $P{id}]]>
+	</queryString>
+	<field name="id_evento" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id_evento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rc_evento"/>
+	</field>
+	<field name="dt_evento" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="dt_evento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rc_evento"/>
+	</field>
+	<field name="rag_sociale" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="rag_sociale"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="indirizzo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="indirizzo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="comune" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="comune"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="provincia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="provincia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="orario_apertura" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="orario_apertura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="103" splitType="Stretch">
+			<textField>
+				<reportElement x="140" y="16" width="420" height="30" uuid="cba975d0-b54f-494e-bb6b-eb1547e5d0e6"/>
+				<textElement>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rag_sociale}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="46" width="410" height="14" uuid="3df56588-7c9e-4f8d-a162-b1c2bd0ed014"/>
+				<textFieldExpression><![CDATA[$F{indirizzo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="10" y="16" width="130" height="30" uuid="742c3a31-58ee-4624-9282-68dffa04e92f"/>
+				<textElement>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dt_evento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="60" width="380" height="20" uuid="0ea9b456-671c-4889-9558-c70f03f41708"/>
+				<textFieldExpression><![CDATA[$F{orario_apertura}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="46" width="100" height="14" uuid="f769576e-119f-4999-8b9b-894f2fb64dd0"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{comune}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="40" y="60" width="100" height="20" uuid="3c90ce73-5202-414b-8eb8-5b48b8a795cb"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[ Orario di apertura :]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="52" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="114" splitType="Stretch">
+			<componentElement>
+				<reportElement x="10" y="10" width="550" height="100" uuid="4675a058-e15e-461f-b767-cabc505fbc92">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="raccolto" uuid="7dce815a-c7ea-4ac6-8dc1-09c5e9e73736">
+						<datasetParameter name="id_e">
+							<datasetParameterExpression><![CDATA[$P{id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="100" uuid="9f4a3ffb-cb75-44e6-a3fa-856d14f5cccd">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna1"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="df3f2bf8-3055-428d-8795-2809003c9a69"/>
+								<textElement textAlignment="Center"/>
+								<text><![CDATA[Tipo animale]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="100" height="30" uuid="2a15ce10-b56c-46a9-b6f7-b63f92ad0396"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{descr_tipo_animale}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="80" uuid="3e115223-a22c-4200-95c3-305ecff094dd">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna2"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="80" height="30" uuid="dc59f894-e3f4-498a-9e58-0c77d0747d1f"/>
+								<textElement textAlignment="Center"/>
+								<text><![CDATA[Tipo Prodotto]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="80" height="30" uuid="01f4b051-8cb0-4e1e-aee1-db37f8b387f0"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{tipo_merce}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="140" uuid="05aba1d4-0db6-4ca8-a00f-fadb60a0cb28">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna3"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="140" height="30" uuid="5df6629a-1db3-40b4-9496-52db4c3abd61"/>
+								<textElement textAlignment="Center"/>
+								<text><![CDATA[Descrizione]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="140" height="30" uuid="d500a38f-d730-49db-8deb-08c01a13e693"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{descrizione}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="513ef410-a645-4f29-a2f6-3df9ebbc3e6f">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna4"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="79cb481e-1bb0-48a2-8eff-aa55d5b820ac"/>
+								<textElement textAlignment="Center"/>
+								<text><![CDATA[Quantita]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="30" uuid="c7ad9d56-63f0-4483-b124-71417265a9da"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{quantita}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:columnGroup width="90" uuid="b005cc60-6209-43f4-bc25-d68b429725c8">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonne [1]"/>
+						<jr:column width="90" uuid="c848592c-768f-43d1-bb50-5a871627c5c9">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna5"/>
+							<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="90" height="30" uuid="41f54df0-3562-4b29-af2b-b437890f4e54"/>
+									<textElement textAlignment="Center"/>
+									<text><![CDATA[Peso]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField>
+									<reportElement x="0" y="0" width="90" height="30" uuid="8425917c-52b6-4eb6-8589-c423ba8b2b95"/>
+									<textElement textAlignment="Center"/>
+									<textFieldExpression><![CDATA[$F{peso}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

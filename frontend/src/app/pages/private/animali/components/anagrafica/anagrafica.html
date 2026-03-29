@@ -1,0 +1,321 @@
+@if (animale && animale.id_animale) {
+<div class="grid p-fluid">
+
+    <div class="col-12 lg:col-3">
+        <div class="surface-card p-4 shadow-2 border-round text-center h-full">
+            <div class="flex flex-column align-items-center gap-3">
+                <p-avatar [image]="animale.foto?.url || 'assets/dog.jpg'" size="xlarge" shape="circle"
+                    class="shadow-2 border-2 border-primary" styleClass="w-12rem h-12rem"></p-avatar>
+
+                <!--<p-fileUpload mode="basic" chooseLabel="Cambia Foto" chooseIcon="pi pi-camera"
+                    styleClass="p-button-sm p-button-outlined w-full" (onSelect)="onChanged()"></p-fileUpload> -->
+
+                <div class="mt-2 w-full">
+                    <div class="text-900 font-bold text-xl">{{animale.nome}}</div>
+                    <div class="text-500 text-sm mt-1">ID: {{animale.id_animale}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 lg:col-9">
+        <div class="surface-card p-4 shadow-2 border-round">
+
+            <div class="text-900 font-bold text-lg mb-3 border-bottom-1 surface-border pb-2">
+                <i class="pi pi-id-card mr-2 text-primary"></i>Dati Identificativi
+            </div>
+            <div class="grid mb-4">
+                <div class="col-12 md:col-4">
+                    <label class="font-bold block mb-2 text-sm text-600">Tipo di animale *</label>
+                    <p-select [options]="listaTipi" [(ngModel)]="animale.id_tipo_animale" (onChange)="onTipoChange()"
+                        optionLabel="label" optionValue="value" placeholder="Seleziona tipo"
+                        [disabled]="isDeceduto"></p-select>
+                </div>
+                <div class="col-12 md:col-4">
+                    <label class="font-bold block mb-2 text-sm text-600">Nome *</label>
+                    <input pInputText [(ngModel)]="animale.nome" (ngModelChange)="onChanged()" maxlength="20"
+                        class="w-20rem" [disabled]="isDeceduto" />
+                    <small class="text-400 font-medium white-space-nowrap"
+                        style="min-width: 35px;margin-left: 0px;">&nbsp;{{animale.nome.length || 0}} / 20 </small>
+                </div>
+                <div class="col-12 md:col-4">
+                    <label class="font-bold block mb-2 text-sm text-600">Data nascita *</label>
+                    <p-datepicker [(ngModel)]="animale.dt_nascita" (ngModelChange)="onChanged()" dateFormat="dd/mm/yy"
+                        [showIcon]="true" [disabled]="isDeceduto"></p-datepicker>
+                </div>
+            </div>
+
+            <div class="text-900 font-bold text-lg mb-3 border-bottom-1 surface-border pb-2">
+                <i class="pi pi-info-circle mr-2 text-primary"></i>Caratteristiche e Razza
+            </div>
+            <div class="grid mb-4">
+
+                <div class="col-12 md:col-4">
+                    <label class="font-bold block mb-2 text-sm text-600">Microchip</label>
+
+                    <div class="flex align-items-center gap-2">
+
+                        <p-inputmask [(ngModel)]="animale.num_microchip" (ngModelChange)="onChanged()"
+                            mask="999999999999999" [unmask]="true" placeholder="Inserire 15 cifre" class="flex-1"
+                            styleClass="w-full" inputStyleClass="w-full" [disabled]="isDeceduto">
+                        </p-inputmask>
+
+                        <small class="text-400 font-medium white-space-nowrap"
+                            style="min-width: 35px;margin-left: 0px;">
+                            {{ (animale.num_microchip?.length || 0) }} / 15
+                        </small>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-4">
+                    <label class="font-bold block mb-2 text-sm text-600">Colore</label>
+                    <p-select [options]="listaColori" [(ngModel)]="animale.id_colore" (onChange)="onChanged()"
+                        optionLabel="descr_colore" optionValue="id_colore" [filter]="true" styleClass="w-20rem"
+                        placeholder="Seleziona colore" [disabled]="isDeceduto"></p-select>
+                </div>
+                <div class="col-12 md:col-4">
+                    <label class="font-bold block mb-2 text-sm text-600">Peso</label>
+                    <div class="p-inputgroup">
+                        <p-inputnumber [(ngModel)]="animale.peso" (ngModelChange)="onChanged()" mode="decimal"
+                            [minFractionDigits]="0" [maxFractionDigits]="0" [max]="99" [min]="0" [maxlength]="2"
+                            inputStyleClass="w-3rem" [disabled]="isDeceduto">
+                        </p-inputnumber>
+                        <span class="p-inputgroup-addon font-bold">&nbsp;kg</span>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-4">
+                    <label class="font-bold block mb-2 text-sm text-600">Sesso</label>
+                    <div class="flex gap-4 mt-2">
+                        <div class="flex align-items-center">
+                            <p-radiobutton name="sesso" value="M" [(ngModel)]="animale.sesso" (onClick)="onChanged()"
+                                inputId="s_m" [disabled]="isDeceduto"></p-radiobutton>
+                            <label for="s_m" class="ml-2">Maschio</label>
+                        </div>
+                        <div class="flex align-items-center">
+                            <p-radiobutton name="sesso" value="F" [(ngModel)]="animale.sesso" (onClick)="onChanged()"
+                                inputId="s_f" [disabled]="isDeceduto"></p-radiobutton>
+                            <label for="s_f" class="ml-2">Femmina</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-4">
+                    <label class="font-bold block mb-2 text-sm text-600">Razza</label>
+                    <p-select [options]="listaRazze" [(ngModel)]="animale.id_razza" (onChange)="onChanged()"
+                        optionLabel="razza" optionValue="id_razza" [filter]="true" styleClass="w-20rem"
+                        placeholder="Seleziona razza" [disabled]="isDeceduto"></p-select>
+                </div>
+                <div class="col-12 md:col-4">
+                    <label class="font-bold block mb-2 text-sm text-600">Tipo di razza</label>
+                    <div class="flex gap-4 mt-2">
+                        <div class="flex align-items-center">
+                            <p-radiobutton name="t_razza" value="0" [(ngModel)]="animale.tipo_razza"
+                                (onClick)="onChanged()" inputId="r_p" [disabled]="isDeceduto"></p-radiobutton>
+                            <label for="r_p" class="ml-2">Pura</label>
+                        </div>
+                        <div class="flex align-items-center">
+                            <p-radiobutton name="t_razza" value="1" [(ngModel)]="animale.tipo_razza"
+                                (onClick)="onChanged()" inputId="r_s" [disabled]="isDeceduto"></p-radiobutton>
+                            <label for="r_s" class="ml-2">Simile</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="surface-card p-4 shadow-2 border-round">
+            <div class="grid">
+                <div class="col-12 md:col-4">
+                    <div class="surface-card p-4 border-round shadow-1 h-full">
+                        <label
+                            class="text-xs text-500 font-bold block mb-2 uppercase tracking-wider">Caratteristiche</label>
+                        <textarea pInputTextarea [(ngModel)]="animale.caratteristiche" [rows]="10"
+                            class="w-full font-medium"
+                            placeholder="Inserisci le caratteristiche specifiche dell'animale..."
+                            [disabled]="isDeceduto"></textarea>
+                        <div class="text-right text-xs text-400 mt-1">{{animale.caratteristiche?.length || 0}} / 1024
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-4">
+                    <div class="surface-card p-4 border-round shadow-1 h-full">
+                        <label class="text-xs text-500 font-bold block mb-3 uppercase tracking-wider">
+                            <i class="pi pi-tags mr-1"></i> Tags Assegnate
+                        </label>
+
+                        <div class="flex flex-column gap-4">
+                            <div class="flex gap-2">
+                                <p-select [options]="listaTags" [(ngModel)]="tagSelezionata" placeholder="Seleziona tag"
+                                    class="flex-1" optionLabel="tag" optionValue="id_tag" [filter]="true"
+                                    [disabled]="isDeceduto"></p-select>
+                                <p-button icon="pi pi-plus" label="Assegna" (onClick)="assegnaTag()" severity="primary"
+                                    [disabled]="isDeceduto"></p-button>
+                            </div>
+
+                            <div
+                                class="flex flex-wrap gap-2 min-h-4rem align-content-start border-top-1 surface-border pt-3">
+                                @for (t of animale.tags; track t.id_tag) {
+                                <p-chip [label]="t.tag | uppercase" [removable]="true" (onRemove)="rimuoviTag(t.id_tag)"
+                                    styleClass="bg-indigo-50 text-indigo-700 font-bold border-1 border-indigo-100"
+                                    [disabled]="isDeceduto"></p-chip>
+                                } @empty {
+                                <span class="text-400 text-sm font-italic">Nessuna tag associata.</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-4">
+                    <div class="surface-card p-4 border-round shadow-1 h-full">
+                        <label class="text-xs text-500 font-bold block mb-3 uppercase tracking-wider">
+                            <i class="pi pi-folder-open mr-1"></i> Gestione Documenti
+                        </label>
+
+                        <div class="flex flex-column gap-4">
+                            <div class="p-3 surface-50 border-round border-1 surface-border flex flex-column gap-2">
+                                <p-select [options]="listaTipiDoc" [(ngModel)]="documentoSelezionato"
+                                    placeholder="Tipo documento" optionLabel="documento" class="w-full"
+                                    styleClass="w-full"
+                                    [disabled]="isDeceduto"></p-select>
+
+                                <div class="flex align-items-center gap-2" style="min-width:0">
+                                    <input #docFileInput type="file" class="hidden"
+                                           (change)="onFileSelect({files: [$any($event.target).files[0]]})" />
+                                    <button type="button"
+                                            class="p-button p-button-sm p-button-outlined p-button-secondary flex-1 overflow-hidden"
+                                            style="min-width:0; white-space:nowrap; text-overflow:ellipsis"
+                                            [disabled]="isDeceduto"
+                                            (click)="docFileInput.click()">
+                                        <i class="pi pi-upload mr-2"></i>
+                                        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap">
+                                            {{ fileDaCaricare ? fileDaCaricare.name : 'Scegli file' }}
+                                        </span>
+                                    </button>
+                                    <p-button icon="pi pi-upload" label="Carica" size="small"
+                                              (onClick)="caricaDocumento()"
+                                              [disabled]="!documentoSelezionato || !fileDaCaricare || isDeceduto"
+                                              severity="success"
+                                              class="flex-shrink-0">
+                                    </p-button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="text-sm font-bold text-700 mb-2 px-1">Documenti Caricati</div>
+                                <div class="flex flex-column border-1 surface-border border-round overflow-hidden">
+                                    @for (doc of animale.documenti; track doc.id_documento) {
+                                        <div class="flex align-items-center gap-2 p-2 border-bottom-1 surface-border hover:surface-50"
+                                             style="min-width:0">
+                                            <i class="pi pi-file text-indigo-400 flex-shrink-0"></i>
+                                            <div class="flex flex-column flex-1" style="min-width:0">
+                                                <span class="text-sm text-800 font-medium white-space-nowrap overflow-hidden"
+                                                      style="text-overflow:ellipsis"
+                                                      [pTooltip]="doc.assoFiles[0]?.filename">
+                                                    {{ doc.assoFiles[0]?.filename || 'Senza nome' }}
+                                                </span>
+                                                <small class="text-400 text-xs">{{ doc.tipoDocumento.documento }} · {{ doc.dt_inserimento }}</small>
+                                            </div>
+                                            <div class="flex gap-1 flex-shrink-0">
+                                                @if (doc.assoFiles && doc.assoFiles.length > 0) {
+                                                    <p-button icon="pi pi-download" [text]="true" severity="primary" size="small"
+                                                              pTooltip="Scarica" (onClick)="download(doc.assoFiles[0])">
+                                                    </p-button>
+                                                }
+                                                <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small"
+                                                          pTooltip="Elimina" [disabled]="isDeceduto"
+                                                          (onClick)="eliminaDocumento(doc.id_documento)">
+                                                </p-button>
+                                            </div>
+                                        </div>
+                                    } @empty {
+                                        <div class="p-4 text-center text-500 text-sm">
+                                            <i class="pi pi-cloud-upload text-300 text-3xl mb-2 block"></i>
+                                            Nessun documento caricato.
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="flex justify-content-between align-items-center mt-3 p-3 surface-card shadow-2 border-round">
+
+            @if (!isDeceduto) {
+            <!-- Sinistra: Decesso -->
+            <p-button label="Decesso" icon="pi pi-heart-broken" severity="secondary" [outlined]="true"
+                styleClass="border-1 border-round" (onClick)="displayDecesso = true">
+            </p-button>
+
+            <!-- Centro: Reset + Elimina -->
+            <div class="flex gap-2">
+                <p-button label="Reset" icon="pi pi-refresh" severity="secondary" [outlined]="true" (onClick)="reset()">
+                </p-button>
+                <p-button label="Elimina" icon="pi pi-trash" severity="danger" [outlined]="true" (onClick)="elimina()">
+                </p-button>
+                <p-button label="Salva" icon="pi pi-save" severity="primary" (onClick)="salva()">
+                </p-button>
+            </div>
+
+            <!-- Destra: Duplica -->
+              <div class="flex gap-2">
+                @if (isValidabile) {
+                    <p-button label="Valida dati" icon="pi pi-check-circle" severity="success"
+                            [outlined]="true" (onClick)="valida()">
+                    </p-button>
+                }
+                <p-button label="Duplica" icon="pi pi-copy" severity="secondary"
+                            [outlined]="true" styleClass="border-1 border-round"
+                            (onClick)="duplica()">
+                </p-button>
+                </div>
+
+            } @else {
+            <div class="w-full text-center">
+                <span class="text-500 font-italic text-sm">
+                    <i class="pi pi-lock mr-2"></i>Scheda in sola lettura — animale deceduto
+                </span>
+            </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+} @else {
+<div class="flex flex-column align-items-center justify-content-center p-8">
+    <p-progressSpinner strokeWidth="4"></p-progressSpinner>
+    <span class="mt-3 text-600 font-medium">Caricamento scheda animale...</span>
+</div>
+}
+
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>
+
+<p-dialog header="Registrazione Decesso" [(visible)]="displayDecesso" [modal]="true" [style]="{width: '380px'}">
+    <div class="flex flex-column gap-3 mt-2">
+        <p class="text-sm line-height-3">
+            Stai registrando il decesso per <strong>{{animale.nome}}</strong>.<br>
+            Questa operazione sposterà l'animale in archivio.
+        </p>
+        <div class="flex flex-column gap-2">
+            <label class="font-bold text-sm">Data del decesso</label>
+            <p-datepicker [(ngModel)]="dataDecesso" [showIcon]="true" appendTo="body"
+                dateFormat="dd/mm/yy"></p-datepicker>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button label="Annulla" [text]="true" severity="secondary" (onClick)="displayDecesso = false"></p-button>
+        <p-button label="Conferma" icon="pi pi-check" severity="danger" (onClick)="confermaDecesso()"></p-button>
+    </ng-template>
+</p-dialog>

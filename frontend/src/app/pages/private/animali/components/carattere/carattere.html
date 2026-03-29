@@ -1,0 +1,88 @@
+<div class="surface-card p-4 shadow-2 border-round">
+
+    <!-- DESCRIZIONI ANIMALE -->
+  <div class="text-900 font-bold text-lg mb-3 border-bottom-1 surface-border pb-2">
+    <i class="pi pi-align-left mr-2 text-primary"></i>Descrizioni
+  </div>
+
+  <div class="grid mb-4">
+    <div class="col-12 md:col-6">
+      <label class="text-xs font-bold text-500 uppercase block mb-2">Descrizione breve</label>
+      <textarea pInputTextarea
+                [(ngModel)]="descrBreve"
+                [rows]="3"
+                placeholder="Descrizione breve dell'animale..."
+                class="w-full"
+                style="resize: vertical;"
+                [maxlength]="255">
+      </textarea>
+      <div class="text-right text-xs text-400 mt-1">{{descrBreve.length || 0}} / 255</div>
+    </div>
+
+    <div class="col-12 md:col-6">
+      <label class="text-xs font-bold text-500 uppercase block mb-2">Descrizione lunga</label>
+      <textarea pInputTextarea
+                [(ngModel)]="descrLunga"
+                [rows]="10"
+                placeholder="Descrizione dettagliata dell'animale..."
+                class="w-full"
+                style="resize: vertical;"
+                [maxlength]="1024">
+      </textarea>
+      <div class="text-right text-xs text-400 mt-1">{{descrLunga.length || 0}} / 1024</div>
+    </div>
+  </div>
+
+    <!-- Lista categorie -->
+    <div class="text-xs font-bold text-500 uppercase mb-3">Elenco caratteri</div>
+
+    <div class="flex flex-column gap-0">
+        @for (riga of righe; track riga.tipo.id_tipo_carattere) {
+        <div class="flex align-items-center py-3 border-bottom-1 surface-border gap-4">
+
+            <!-- Icona + Label categoria -->
+            <div class="flex align-items-center gap-3" style="min-width: 220px;">
+                <div class="border-circle flex align-items-center justify-content-center flex-shrink-0"
+                     [style]="'width:2.8rem; height:2.8rem; background:' + getColoreCategoria(riga.tipo.id_tipo_carattere)">
+                    <img [src]="'assets/carattere/' + riga.tipo.icona"
+                         [alt]="riga.tipo.contesto"
+                         style="width:1.6rem; height:1.6rem; object-fit:contain; filter:invert(1) brightness(2);">
+                </div>
+                <span class="font-bold text-700 text-sm uppercase">
+                    {{riga.tipo.contesto}}
+                </span>
+            </div>
+
+            <!-- Textarea per SONO SPECIALE PERCHE' (tipo 0) -->
+            @if (isRigaLibera(riga)) {
+            <div class="flex-1">
+                <textarea pInputTextarea [(ngModel)]="riga.noteLibere" [rows]="2"
+                    placeholder="Inserisci cosa rende speciale questo animale..." class="w-full text-sm"
+                    style="resize: vertical;" [maxlength]="512">
+        </textarea>
+                <div class="text-right text-xs text-400">{{riga.noteLibere.length || 0}} / 512</div>
+            </div>
+            } @else {
+            <!-- Dropdown per tutte le altre categorie -->
+            <div class="flex-1">
+                <p-select [options]="riga.opzioni" [(ngModel)]="riga.carattereSelezionato" optionLabel="carattere"
+                    placeholder="Seleziona un carattere" styleClass="w-full">
+                </p-select>
+            </div>
+            }
+
+        </div>
+        }
+    </div>
+
+    <!-- Footer Salva / Reset -->
+    <div class="flex justify-content-center gap-3 mt-4 pt-3 border-top-1 surface-border">
+        <p-button label="Salva" icon="pi pi-save" severity="primary" [loading]="loading" (onClick)="salva()">
+        </p-button>
+        <p-button label="Reset" icon="pi pi-refresh" severity="secondary" [outlined]="true" (onClick)="reset()">
+        </p-button>
+    </div>
+
+</div>
+
+<p-toast></p-toast>

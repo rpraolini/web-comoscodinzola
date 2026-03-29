@@ -1,0 +1,171 @@
+<app-public-header></app-public-header>
+
+<div class="surface-ground min-h-screen w-full pt-6 pb-8 px-4 md:px-6 lg:px-8">
+    
+    <div class="mx-auto w-full" style="max-width: 1300px;"> <div class="grid grid-nogutter align-items-center mb-8">
+            
+            <div class="col-12 md:col-6 text-center md:text-left mb-6 md:mb-0">
+                <h1 class="text-7xl font-bold text-900 mb-2 mt-0">Gestisci la tua Associazione</h1>
+                <div class="text-6xl text-primary font-bold mb-5">in modo semplice e veloce</div>
+                
+                <p class="text-2xl text-700 line-height-3 mb-6 md:pr-4">
+                    La piattaforma completa per la gestione dei tuoi animali. 
+                    Accessibile ovunque, sicuro e sempre aggiornato.
+                </p>
+                
+                <div class="flex flex-column md:flex-row gap-3 justify-content-center md:justify-content-start">
+                    <p-button label="Accedi al Gestionale" routerLink="/login" icon="pi pi-arrow-right" iconPos="right" size="large" styleClass="text-xl p-3"></p-button>
+                    <p-button label="Adotta un amico" routerLink="/cerca" icon="pi pi-heart" severity="help" [outlined]="true" size="large" styleClass="text-xl p-3"></p-button>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6 pl-0 md:pl-6">
+                <img [src]="logoImageUrl" alt="Hero Image" class="w-full border-round-2xl shadow-4 block" style="max-height: 500px; object-fit: cover;">
+            </div>
+        </div>
+
+        <div class="px-4 md:px-6 lg:px-8 pb-8">
+        <h2 class="text-900 text-center text-3xl font-bold mb-6">Ecco alcuni amici che hanno bisogno di te</h2>
+
+        <div *ngIf="loading" class="text-center">Caricamento amici... </div>
+
+        <p-carousel [value]="animali" [numVisible]="3" [numScroll]="1" [circular]="true" 
+                    [responsiveOptions]="responsiveOptions" autoplayInterval="5000">
+            
+            <ng-template let-animale pTemplate="item">
+                <div class="border-1 surface-border border-round m-2 text-center py-5 px-3 surface-card h-full">
+                    
+                    <div class="mb-3 relative mx-auto" style="width: 250px; height: 250px; overflow: hidden; border-radius: 50%;">
+                        <img [src]="animale.foto?.url" [alt]="animale.nome" [routerLink]="['/dettaglio', animale.id_animale]"
+                             class="w-full h-full" style="object-fit: cover;">
+                    </div>
+
+                    <div>
+                        <h4 class="mb-1 text-2xl font-bold">{{ animale.nome }}</h4>
+                        <div class="mb-3 text-500 font-medium">{{ animale.razza || 'Meticcio' }}</div>
+                    </div>
+                </div>
+            </ng-template>
+        </p-carousel>
+    </div>
+
+    <div class="mb-8 border-bottom-1 surface-border"></div>
+    
+    <div class="surface-card p-5 md:p-6 border-round-2xl shadow-2 mb-8 flex flex-column md:flex-row align-items-center justify-content-between border-left-3 border-pink-500">
+            <div class="mb-4 md:mb-0 text-center md:text-left">
+                <h2 class="text-3xl font-bold text-900 mb-2 mt-0">
+                    <i class="pi pi-heart-fill text-pink-500 mr-2 text-3xl"></i> Storie a lieto fine
+                </h2>
+                <p class="text-xl text-700 m-0">
+                    Scopri le centinaia di cani e gatti che hanno già trovato una famiglia amorevole grazie a noi.
+                </p>
+            </div>
+            <p-button label="Guarda le adozioni" 
+                      icon="pi pi-arrow-right" 
+                      iconPos="right" 
+                      routerLink="/lieti-fine" 
+                      severity="help" 
+                      size="large" 
+                      styleClass="px-4 py-3 text-lg font-bold">
+            </p-button>
+        </div>
+        <div class="mb-8 border-bottom-1 surface-border"></div>
+        
+
+        <div class="text-center md:text-left mb-6">
+            <h2 class="text-900 font-bold text-6xl mb-3 mt-0">Voglio adottare un cane. <span class="text-primary">Da dove comincio?</span></h2>
+            <div class="text-2xl text-600">Una guida rapida per fare la scelta giusta per te e per lui.</div>
+        </div>
+
+        <div class="surface-card p-5 md:p-7 border-round-2xl shadow-2">
+            
+            <div class="surface-50 p-5 border-round-xl mb-7 border-left-3 border-orange-400">
+                <div class="text-3xl font-bold text-900 mb-4 flex align-items-center">
+                    <i class="pi pi-question-circle text-orange-500 text-4xl mr-3"></i>
+                    Il tuo stile di vita è adatto?
+                </div>
+                
+                <p class="mb-4 line-height-3 text-xl text-800">La primissima cosa da fare è valutare se il tuo stile di vita è adatto ad un cane.</p>
+                <div class="font-bold mb-3 text-orange-700 text-xl">Ripensa alla tua decisione se:</div>
+                
+                <div class="grid">
+                    <div class="col-12 md:col-6">
+                        <ul class="list-none p-0 m-0">
+                            <li class="flex align-items-start mb-4">
+                                <i class="pi pi-times text-red-500 mr-3 mt-1 text-xl"></i>
+                                <span class="text-800 text-lg line-height-3">Dovrai lasciarlo solo più di 5-6 ore al giorno.</span>
+                            </li>
+                            <li class="flex align-items-start mb-4">
+                                <i class="pi pi-times text-red-500 mr-3 mt-1 text-xl"></i>
+                                <span class="text-800 text-lg line-height-3">Problemi economici per cure e cibo.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-12 md:col-6">
+                        <ul class="list-none p-0 m-0">
+                            <li class="flex align-items-start mb-4">
+                                <i class="pi pi-times text-red-500 mr-3 mt-1 text-xl"></i>
+                                <span class="text-800 text-lg line-height-3">È in arrivo un bimbo che assorbirà il tempo.</span>
+                            </li>
+                            <li class="flex align-items-start mb-4">
+                                <i class="pi pi-times text-red-500 mr-3 mt-1 text-xl"></i>
+                                <span class="text-800 text-lg line-height-3">Disaccordo in famiglia.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="col-12 md:col-6 pr-0 md:pr-5 mb-6 md:mb-0">
+                    <div class="text-3xl font-bold text-900 mb-4 pb-2 border-bottom-1 surface-border">
+                        <span class="text-primary mr-2">1.</span> La Taglia
+                    </div>
+                    <p class="line-height-3 mb-5 text-800 text-xl">
+                        Il cane piccolo occupa meno spazio ma spesso è più vivace. Ecco il nostro vocabolario delle taglie:
+                    </p>
+                    <div class="surface-50 p-4 border-round">
+                        <div class="grid text-lg m-0">
+                            <div class="col-6 font-bold text-900">Mini / Piccola</div>
+                            <div class="col-6 text-right text-700">fino a 10 kg</div>
+                            <div class="col-12 border-bottom-1 surface-border my-2"></div>
+                            
+                            <div class="col-6 font-bold text-900">Medio-Piccola</div>
+                            <div class="col-6 text-right text-700">10 - 15 kg</div>
+                            <div class="col-12 border-bottom-1 surface-border my-2"></div>
+
+                            <div class="col-6 font-bold text-900">Media</div>
+                            <div class="col-6 text-right text-700">15 - 25 kg</div>
+                            <div class="col-12 border-bottom-1 surface-border my-2"></div>
+
+                            <div class="col-6 font-bold text-900">Grande</div>
+                            <div class="col-6 text-right text-700">oltre 30 kg</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-6 pl-0 md:pl-5">
+                    <div class="text-3xl font-bold text-900 mb-4 pb-2 border-bottom-1 surface-border">
+                        <span class="text-primary mr-2">2.</span> Il Sesso
+                    </div>
+                    <div class="flex flex-column gap-4">
+                        <div class="p-4 border-left-3 border-pink-500 surface-50 border-round-right shadow-1">
+                            <span class="font-bold text-pink-600 block mb-2 text-xl"><i class="pi pi-venus mr-2"></i>Femmine</span>
+                            <span class="text-lg text-800 line-height-3">Richiediamo la <strong>sterilizzazione obbligatoria</strong>, senza deroghe.</span>
+                        </div>
+                        <div class="p-4 border-left-3 border-blue-500 surface-50 border-round-right shadow-1">
+                            <span class="font-bold text-blue-600 block mb-2 text-xl"><i class="pi pi-mars mr-2"></i>Maschi</span>
+                            <span class="text-lg text-800 line-height-3">Non sempre obbligatoria, ma vivamente consigliata.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center pt-6 border-top-1 surface-border">
+                <p class="text-2xl text-800 mb-5 font-medium">Tutto chiaro? Allora sei pronto a cercare il tuo nuovo amico!</p>
+                <p-button label="Vai alla ricerca" icon="pi pi-search" routerLink="/cerca" rounded="true" size="large" styleClass="text-xl px-5 py-3"></p-button>
+            </div>
+
+        </div> 
+    </div> 
+</div>

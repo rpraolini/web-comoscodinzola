@@ -1,0 +1,94 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Occupa tutto lo spazio del main */
+    width: 100%;
+}
+
+/* Rende la breadcrumb di PrimeNG più sottile per i gestionali densi di dati */
+::ng-deep .p-breadcrumb {
+    .p-breadcrumb-list {
+        margin: 0;
+        padding: 0;
+        li.p-menuitem-separator {
+            margin: 0 0.5rem;
+            font-size: 0.7rem;
+            color: var(--text-color-secondary);
+        }
+        .p-menuitem-link {
+            .p-menuitem-text {
+                font-size: 0.85rem;
+                color: var(--primary-color);
+            }
+            .p-menuitem-icon {
+                font-size: 0.85rem;
+            }
+        }
+    }
+}
+
+/* Sidebar */
+.sidebar {
+    width: 100px;
+    min-width: 100px;
+    background-color: #111827;
+    border-right: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Voce di menu */
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 12px 6px;
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.45);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+    position: relative;
+}
+
+.nav-item i {
+    font-size: 1.2rem;
+}
+
+.nav-item span {
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    white-space: normal;        /* era nowrap */
+    text-align: center;
+    line-height: 1.2;
+    max-width: 80px;
+}
+
+/* Hover */
+.nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.07);
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* Active */
+.nav-item--active {
+    background-color: rgba(99, 102, 241, 0.25) !important;
+    color: #d2d9fc !important;   /* indigo-300, più chiaro e leggibile sul nero */
+}
+
+.nav-item--active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 15%;
+    height: 70%;
+    width: 4px;                  /* era 3px */
+    background-color: #818cf8;   /* indigo-400, più luminoso */
+    border-radius: 0 4px 4px 0;
+}
+
+.nav-item--active i {
+    font-size: 1.3rem;
+}

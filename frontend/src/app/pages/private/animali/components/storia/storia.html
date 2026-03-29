@@ -1,0 +1,212 @@
+<div class="grid p-fluid">
+
+    <!-- TOOLBAR -->
+    <div class="col-12">
+        <div class="flex justify-content-between align-items-center mb-3">
+            <span class="text-900 font-bold text-lg">
+                <i class="pi pi-clock mr-2 text-primary"></i>Storia dell'animale
+            </span>
+            <p-button label="Nuovo evento" icon="pi pi-plus" severity="primary" (onClick)="apriNuovo()">
+            </p-button>
+        </div>
+    </div>
+
+    <!-- LISTA EVENTI -->
+    @if (eventi.length > 0) {
+    <div class="col-12">
+        <div class="grid">
+            @for (evento of eventi; track evento.id_evento) {
+            <div class="col-12 md:col-6 lg:col-4">
+                <div class="surface-card border-round shadow-2 p-4 h-full flex flex-column gap-2
+                        border-left-3 border-primary">
+
+                    <!-- Header card -->
+                    <div class="flex justify-content-between align-items-start">
+                        <div class="flex flex-column gap-1">
+                            <span class="font-bold text-900 text-base">{{evento.evento}}</span>
+                            <span class="text-500 text-xs">
+                                <i class="pi pi-calendar mr-1"></i>
+                                {{evento.dt_da}}
+                                @if (evento.dt_a) { → {{evento.dt_a}} }
+                            </span>
+                        </div>
+                        <div class="flex gap-1">
+                            <p-button icon="pi pi-pencil" [text]="true" severity="secondary" size="small"
+                                pTooltip="Modifica" (onClick)="apriModifica(evento)">
+                            </p-button>
+                            <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small" pTooltip="Elimina"
+                                (onClick)="elimina(evento)">
+                            </p-button>
+                        </div>
+                    </div>
+
+                    <!-- Costi -->
+                    @if (['4','5'].includes(evento.id_tipo_evento) && (evento.ct_gg !== '0' || evento.ct_mese !== '0')) {
+                    <div class="flex gap-2">
+                        @if (evento.ct_mese && evento.ct_mese !== '0') {
+                        <p-tag [value]="'€ ' + evento.ct_mese + '/mese'" severity="warn" styleClass="text-xs"></p-tag>
+                        }
+                        @if (evento.ct_gg && evento.ct_gg !== '0') {
+                        <p-tag [value]="'€ ' + evento.ct_gg + '/gg'" severity="warn" styleClass="text-xs"></p-tag>
+                        }
+                    </div>
+                    }
+
+                    <!-- Contatto -->
+                    @if (evento.contatto) {
+                    <div class="text-sm text-600 flex align-items-center gap-2">
+                        <i class="pi pi-user text-primary"></i>
+                        <span>
+                        {{getDisplayContatto(evento.contatto)}}
+                        @if (evento.contatto.desc_provincia) { — {{evento.contatto.desc_provincia}} }
+                        </span>
+                    </div>
+                    }
+
+                    <!-- Note -->
+                    @if (evento.note) {
+                    <div class="text-sm text-600 surface-50 border-round p-2 mt-1">
+                        <i class="pi pi-comment mr-1 text-primary"></i>{{evento.note}}
+                    </div>
+                    }
+
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+    } @else {
+    <div class="col-12">
+        <div class="text-center p-6 surface-card border-round shadow-1 text-500">
+            <i class="pi pi-clock text-300 text-5xl mb-3 block"></i>
+            <span class="text-sm">Nessun evento storico registrato per questo animale.</span>
+        </div>
+    </div>
+    }
+
+</div>
+
+<!-- DIALOG NUOVO / MODIFICA -->
+<p-dialog [header]="isModifica ? 'Modifica Evento' : 'Nuovo Evento'" [(visible)]="displayDialog" [modal]="true"
+    [style]="{width: '550px'}" [draggable]="false">
+
+    <div class="flex flex-column gap-4 pt-2">
+
+        <div class="flex flex-column gap-1">
+            <label class="text-xs font-bold text-500 uppercase">Tipo evento *</label>
+            <p-select [options]="tipiEventoFiltrati" [(ngModel)]="eventoCorrente.id_tipo_evento"
+                optionLabel="tipo_evento" optionValue="id_tipo_evento" placeholder="Seleziona tipo evento..."
+                styleClass="w-full" appendTo="body">
+            </p-select>
+        </div>
+
+        <div class="grid p-fluid">
+            <div class="col-6">
+                <label class="text-xs font-bold text-500 uppercase block mb-1">Data inizio *</label>
+                <p-datepicker [(ngModel)]="eventoCorrente.dt_da" dateFormat="dd/mm/yy" [showIcon]="true"
+                    appendTo="body">
+                </p-datepicker>
+            </div>
+            <div class="col-6">
+                <label class="text-xs font-bold text-500 uppercase block mb-1">Data fine</label>
+                <p-datepicker [(ngModel)]="eventoCorrente.dt_a" dateFormat="dd/mm/yy" [showIcon]="true" appendTo="body">
+                </p-datepicker>
+            </div>
+        </div>
+
+        @if (mostraCosti) {
+        <div class="grid p-fluid">
+            <div class="col-6">
+                <label class="text-xs font-bold text-500 uppercase block mb-1">Costo al giorno</label>
+                <div class="p-inputgroup custom-input-group">
+
+                    <p-inputnumber [(ngModel)]="eventoCorrente.ct_gg" mode="decimal" [minFractionDigits]="2"
+                        placeholder="0,00" prefix="€ " suffix=" /gg">
+                    </p-inputnumber>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <label class="text-xs font-bold text-500 uppercase block mb-1">Costo mensile</label>
+                <div class="p-inputgroup custom-input-group">
+
+                    <p-inputnumber [(ngModel)]="eventoCorrente.ct_mese" mode="decimal" [minFractionDigits]="2"
+                        placeholder="0,00" prefix="€ " suffix=" /mese">
+                    </p-inputnumber>
+
+                </div>
+            </div>
+        </div>
+        }
+
+        <!-- Contatto -->
+         <div class="flex flex-column gap-1">
+  <label class="text-xs font-bold text-500 uppercase">Contatto</label>
+  <p-autoComplete
+    [(ngModel)]="eventoCorrente.contatto"
+    [suggestions]="contattiSuggeriti"
+    (completeMethod)="cercaContatto($event)"
+    optionLabel="cognome"
+    [forceSelection]="false"
+    placeholder="Cerca per nome o cognome..."
+    styleClass="w-full"
+    appendTo="body"
+    [minLength]="2">
+
+    <ng-template let-contatto pTemplate="item">
+      <div class="flex flex-column">
+        <span class="font-bold">{{getDisplayContatto(contatto)}}</span>
+        <small class="text-500">
+          {{contatto.desc_provincia || ''}}
+          @if (contatto.email) { · {{contatto.email}} }
+        </small>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="selectedItem" let-contatto>
+      <span>{{getDisplayContatto(contatto)}}</span>
+    </ng-template>
+
+  </p-autoComplete>
+
+  <!-- Mostra contatto selezionato con possibilità di rimozione -->
+  @if (eventoCorrente.contatto?.id_contatto) {
+    <div class="flex align-items-center justify-content-between mt-1 p-2 surface-50 border-round border-1 surface-border">
+      <div class="flex align-items-center gap-2 text-sm">
+        <i class="pi pi-user text-primary"></i>
+        <span class="font-bold">{{getDisplayContatto(eventoCorrente.contatto)}}</span>
+        @if (eventoCorrente.contatto.desc_provincia) {
+          <span class="text-500">— {{eventoCorrente.contatto.desc_provincia}}</span>
+        }
+      </div>
+      <p-button icon="pi pi-times" [text]="true" severity="danger" size="small"
+                pTooltip="Rimuovi contatto"
+                (onClick)="eventoCorrente.contatto = null">
+      </p-button>
+    </div>
+  }
+</div>
+
+<!-- Note -->
+        <div class="flex flex-column gap-1">
+            <label class="text-xs font-bold text-500 uppercase">Note</label>
+            <textarea pInputTextarea [(ngModel)]="eventoCorrente.note" [rows]="3" placeholder="Note sull'evento..."
+                class="w-full" style="resize: vertical;">
+      </textarea>
+        </div>
+
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="flex justify-content-end gap-2">
+            <p-button label="Annulla" [text]="true" severity="secondary" (onClick)="displayDialog = false">
+            </p-button>
+            <p-button label="Salva" icon="pi pi-save" severity="primary" [loading]="saving" (onClick)="salva()">
+            </p-button>
+        </div>
+    </ng-template>
+
+</p-dialog>
+
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>

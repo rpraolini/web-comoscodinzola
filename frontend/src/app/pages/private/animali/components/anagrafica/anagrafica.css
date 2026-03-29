@@ -1,0 +1,13 @@
+:host ::ng-deep {
+    /* Rimuove il margine inferiore automatico di PrimeNG sugli input */
+    .p-inputtext, .p-inputmask, .p-inputnumber-input {
+        margin-bottom: 0 !important;
+    }
+
+    /* Posiziona il contatore esattamente sotto l'input */
+    .flex-column small.text-right {
+        display: block;
+        margin-top: 2px; /* Regola questo valore per la distanza desiderata */
+        line-height: 1;
+    }
+}

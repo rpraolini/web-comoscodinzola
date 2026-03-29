@@ -1,0 +1,46 @@
+<div class="compact ui stackable grid container">
+  
+  <div class="row" >
+    <div class="sixteen wide column">
+      <h3>Amici a cui abbiamo regalato un lieto fine.</h3>
+    </div>
+  </div>
+        
+  <div class="row" style="margin-top:10px; margin-bottom:5px" *ngIf="animali">
+    <div class="sixteen wide column">
+      <h5>Da gennaio 2018 i cani e gatti felici grazie all'adozione sono <b><span style="font-size: 20pt;">{{animaliCount}}</span></b>. Scegliete di adottare e insieme cambieremo il destino di altri animali sfortunati.</h5>
+    </div>
+	</div>
+	
+	<div class="row" style="margin-bottom:5px" *ngIf="animali">
+    <div class="sixteen wide column">
+      <h5>Negli anni : <a *ngFor="let anno of anni" style="cursor: pointer" (click)="getAnimaliForAnno(anno.value_2)">{{anno.value_2}} ({{anno.value_1}})&nbsp;&nbsp;&nbsp;</a> </h5>
+    </div>
+  </div>
+
+  <div class="row">
+	<div class="sixteen wide column">
+		<div class="ui four stackable link cards">
+			<div class="card" *ngFor="let animale of animali">
+				<div class="ui fluid image">
+				   	<div class="PhotoCard"><img (click)="showImage(animale.foto.url)" src="{{animale.foto.url}}"></div>
+				</div>
+			<div class="content">
+				 <div class="header">
+				 	<label class="header">Sono {{animale.nome}}</label> 
+					</div>
+				   	<div class="meta">
+				     	<i>... e sono {{animale.sesso=='M'?'stato adottato':'stata adottata'}} a {{animale.location}}.</i>
+				   </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+</div>
+
+
+
+

@@ -1,0 +1,19 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+    --font-family: 'Inter', sans-serif;
+}
+
+/* Assicurati che lo prenda anche il body */
+body {
+    font-family: var(--font-family);
+}
+
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}

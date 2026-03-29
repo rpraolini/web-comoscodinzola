@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final utlizzo versione della libreria JasperReports6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="questionario" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ced95029-b569-4027-895c-af2843a4e088">
+	<property name="com.jaspersoft.studio.data.sql.tables">
+		<![CDATA[YW5fYW5pbWFsZSAsMTUsMTUsMjc0YTEwNWUtZjdhMC00N2MyLTgyMmItZGIyMjQ2YWM2MWM1O2Fu
+X2NvbnRhdHRpICwyMTAsMTUsMjI1OTlmMzYtZjY4Yi00ZjNkLWE1NjQtZmViMDNhMjgxN2RiO2Fu
+X3JfaXRlciAsMTIyLDE1LDQxODJlYThiLWNlZGYtNDE0ZC1iNmE2LWM0ZGJmMjgwZWZjOTs=]]>
+	</property>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="272"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="722"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="mysql-asso"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="489"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="497"/>
+	<style name="Title" fontName="Arial" fontSize="50" isBold="true"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="key" class="java.lang.String"/>
+	<parameter name="logo_url" class="java.lang.String"/>
+	<parameter name="sotto_report" class="java.lang.String"/>
+	<parameter name="rag_sociale" class="java.lang.String"/>
+	<parameter name="iscrizione" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+				  concat(c.nome," ",c.cognome) as volontaria,
+				  i.nome as nome_adottante,
+				  i.quest_key,
+				  a.nome as nome_animale, c.cellulare
+				FROM
+				  an_r_iter i
+				  INNER JOIN an_contatti c ON i.id_contatto_vol = c.id_contatto
+				  INNER JOIN an_animale a ON i.id_animale = a.id_animale
+				WHERE
+				  i.quest_key = $P{key}]]>
+	</queryString>
+	<field name="volontaria" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="volontaria"/>
+	</field>
+	<field name="nome_adottante" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="nome_adottante"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_r_iter"/>
+	</field>
+	<field name="quest_key" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="quest_key"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_r_iter"/>
+	</field>
+	<field name="nome_animale" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="nome_animale"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_animale"/>
+	</field>
+	<field name="cellulare" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="cellulare"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="316" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="164" height="126" uuid="ddc15723-2728-421f-b95e-2df9faf64ce1"/>
+				<imageExpression><![CDATA[$P{logo_url}]]></imageExpression>
+			</image>
+			<frame>
+				<reportElement style="Row" mode="Transparent" x="4" y="132" width="555" height="179" uuid="efb6d689-f3a3-4442-82fd-64299ebf9ee0"/>
+				<textField>
+					<reportElement x="0" y="141" width="528" height="21" uuid="d4460958-81fa-4327-a560-b3be4a8ed163"/>
+					<textElement textAlignment="Left"/>
+					<textFieldExpression><![CDATA["La VOLONTARIA di riferimento per questo affidamento e' " + $F{volontaria}   + " (" + (($F{cellulare} != null) ? $F{cellulare} : "Non definito")  + ")"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="-3" width="552" height="140" uuid="add691da-1c88-4acc-b73e-49a8f7d3d893"/>
+					<textElement textAlignment="Left"/>
+					<text><![CDATA[Prima di definire ogni adozione e' uso conoscere meglio l'adottante.
+Come per voi, anche per noi e' importante il benessere animale, seguendo queste prassi entrambe saremo contente di dare il meglio al cane che si vuole adottare.
+
+Il seguente questionario e' puramente conoscitivo e non implica la certezza dell'adozione del cane richiesto.
+
+La prassi e': compilare il questionario, conoscersi telefonicamente, conoscersi personalmente (Se siete in una citta' diversa dalla nostra, una volontaria di nostra fiducia verra' a conoscervi personalmente).
+
+Tutte queste fasi sono puramente conoscitive al fine di valutare se il cane da voi scelto e' il cane adatto alla situazione. L'ultima fase e' la firma del modulo di adozione e arrivo del cane all'adottante.]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="0" y="161" width="204" height="18" uuid="c9dc7d32-b954-4a78-92b2-f6c0ab8ab40d"/>
+					<textElement textAlignment="Left"/>
+					<textFieldExpression><![CDATA["Questionario per : " + $F{nome_animale}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<textField>
+				<reportElement x="172" y="0" width="379" height="60" uuid="ddc7f728-cecf-4021-88b8-2fcde629d462"/>
+				<textElement>
+					<font fontName="Arial" size="26" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{rag_sociale}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="171" y="70" width="381" height="50" uuid="90519ff6-d3ba-487c-808b-8a420ed83e2e"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{iscrizione}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="7" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="34" splitType="Stretch">
+			<subreport>
+				<reportElement x="-10" y="0" width="564" height="33" uuid="e96ecfe8-5b77-42c5-a6b9-f608f3127ca3"/>
+				<subreportParameter name="key_s">
+					<subreportParameterExpression><![CDATA[$F{quest_key}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{sotto_report} + "./questionario_dettaglio.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="16" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="9" width="555" height="1" uuid="fa45a887-615a-4d84-a2d7-8a2219671b3c"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="-21" y="0" width="597" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="183682bc-d976-4756-83e0-6625a3f98ed1"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="540" y="0" width="40" height="20" forecolor="#736343" uuid="0193f9b3-1559-491a-8580-b6988863b6a1"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="460" y="0" width="80" height="20" forecolor="#736343" uuid="d00b105e-494b-418b-8ac9-8b1b4824f4f0"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Pagina "+$V{PAGE_NUMBER}+" di"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement style="Column header" x="20" y="2" width="197" height="20" forecolor="#736343" uuid="0616f3fe-0354-456f-8911-ec30ec51a5ae"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

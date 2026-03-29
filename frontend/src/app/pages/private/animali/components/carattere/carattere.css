@@ -1,0 +1,6 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Occupa tutto lo spazio del main */
+    width: 100%;
+}

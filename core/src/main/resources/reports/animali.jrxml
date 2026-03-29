@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final utlizzo versione della libreria JasperReports6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="animali" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8a465670-cc4a-4270-965f-8efb86e33b71">
+	<property name="com.jaspersoft.studio.data.sql.tables">
+		<![CDATA[YXNzby52X2FuaW1hbGkgQVMgLDc1LDI4LGY3MzkzYWJlLWZmZmUtNGQ0Ny1iYWQxLTZjYzE3Y2I0
+NmIyODs=]]>
+	</property>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="mysql-asso"/>
+	<style name="Table" fontName="Times New Roman">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TH" mode="Opaque" backcolor="#FFFFFF" fontName="Times New Roman">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#EFEFEF" fontName="Times New Roman">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF" fontName="Times New Roman">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="tableDataset" uuid="fb78d626-ee71-4b96-81f0-f7eb6486c96e">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="mysql-asso"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT v_animali.id_animale,
+	v_animali.cod_animale,
+	v_animali.nome,
+	v_animali.dt_nascita,
+	v_animali.eta,
+	v_animali.num_microchip,
+	v_animali.peso,
+	v_animali.taglia,
+	v_animali.descr_colore,
+	v_animali.descr_tipo_animale,
+	v_animali.descr_stato,
+	v_animali.caratteristiche,
+	v_animali.sesso,
+	v_animali.tipo_razza,
+	v_animali.razza
+FROM v_animali]]>
+		</queryString>
+		<field name="id_animale" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="id_animale"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="v_animali"/>
+		</field>
+		<field name="cod_animale" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="cod_animale"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="v_animali"/>
+		</field>
+		<field name="nome" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="nome"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="v_animali"/>
+		</field>
+		<field name="dt_nascita" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="dt_nascita"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="v_animali"/>
+		</field>
+		<field name="eta" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="eta"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="v_animali"/>
+		</field>
+		<field name="num_microchip" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="num_microchip"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="v_animali"/>
+		</field>
+		<field name="peso" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="peso"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="v_animali"/>
+		</field>
+		<field name="taglia" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="taglia"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="v_animali"/>
+		</field>
+		<field name="descr_colore" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="descr_colore"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="v_animali"/>
+		</field>
+		<field name="descr_tipo_animale" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="descr_tipo_animale"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="v_animali"/>
+		</field>
+		<field name="descr_stato" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="descr_stato"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="v_animali"/>
+		</field>
+		<field name="caratteristiche" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="caratteristiche"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="v_animali"/>
+		</field>
+		<field name="sesso" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="sesso"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="v_animali"/>
+		</field>
+		<field name="tipo_razza" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="tipo_razza"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="v_animali"/>
+		</field>
+		<field name="razza" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="razza"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="v_animali"/>
+		</field>
+	</subDataset>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<title>
+		<band height="45" splitType="Stretch"/>
+	</title>
+	<pageFooter>
+		<band height="38" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="200" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<componentElement>
+				<reportElement x="0" y="0" width="910" height="200" uuid="71dda76a-fc84-4c36-ab54-f8a4ca8e0b35">
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.grid.JSSGridBagLayout"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="tableDataset" uuid="a65bd9db-02c6-4ce0-b04b-de91b76965a7">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="53" uuid="9c5f45fa-3077-4d64-953c-4c980923a5c3">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna1"/>
+						<jr:tableHeader style="Table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="53" height="30" uuid="3f1896f1-ca06-40b0-9ba9-61e3174c6c3e">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[id_animale]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="53" height="30" uuid="01b70758-3571-4481-8c3e-f89ee6c64966">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{id_animale}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="53" uuid="2ac79875-a73a-47de-8438-489e7fb03f0a">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna2"/>
+						<jr:tableHeader style="Table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="53" height="30" uuid="3418dfe7-1703-4402-8961-3dd0b6894ca5">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[cod_animale]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="53" height="30" uuid="ab02c324-89e6-4116-9344-8cd48cf61b8e">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{cod_animale}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="53" uuid="6bd5e243-b48f-42f3-99cb-51708881a549">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna3"/>
+						<jr:tableHeader style="Table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="53" height="30" uuid="450aa26e-99b4-4ac1-a477-6fe0e65186e0">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[nome]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="53" height="30" uuid="e3fd8637-3657-40ff-b7da-df4afba3ad89">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="53" uuid="b1561f66-de8f-42ae-bfac-fc256249accf">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna4"/>
+						<jr:tableHeader style="Table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="53" height="30" uuid="8b356393-1cc7-4fef-ab0d-2fbff30cd30e">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[dt_nascita]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="53" height="30" uuid="625f6f72-57d2-481c-a235-d3a2b40cbcdb">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{dt_nascita}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="53" uuid="646aa774-b7b8-4ef1-81f6-d94efb5f6be0">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna5"/>
+						<jr:tableHeader style="Table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="53" height="30" uuid="144eecb8-ec97-4f06-9021-c34ba509ee46">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[eta]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="53" height="30" uuid="3c01ba01-e6d5-44e9-9d4d-a52a05cc79af">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{eta}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="53" uuid="a74081a7-c016-440e-b409-ad6bef290081">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna6"/>
+						<jr:tableHeader style="Table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="53" height="30" uuid="67dcd06d-9e6e-4c17-8869-6e0c8d99eb24">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[num_microchip]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="53" height="30" uuid="f24f1816-6bf3-45b6-91f4-3b06b8340ab0">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{num_microchip}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="53" uuid="5f43da62-89ed-40ae-82b4-80b6f4269d49">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna7"/>
+						<jr:tableHeader style="Table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="53" height="30" uuid="64964807-7a35-4e7e-b1f8-05149b48cc32">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[peso]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="53" height="30" uuid="c9be4172-96ed-43f5-87bf-cc25ae4ee7a4">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{peso}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="53" uuid="e00c3396-3d0f-4c49-a236-cd8dbaf146bb">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna8"/>
+						<jr:tableHeader style="Table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="53" height="30" uuid="2052e8e6-8dde-4692-aefc-bee9571751e4">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[taglia]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="53" height="30" uuid="32f4f910-d897-48c4-a072-32ea86334b83">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{taglia}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="53" uuid="56e009c8-fc1d-4af2-9fa3-1874f4281d95">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna9"/>
+						<jr:tableHeader style="Table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="53" height="30" uuid="1d7c3504-48a2-4a73-98af-d0bde1b0584c">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[descr_colore]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="53" height="30" uuid="940fc761-2455-4ea9-a1f9-d86c72f85f04">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{descr_colore}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="53" uuid="ce852324-77fa-49d9-98a9-83788fa975de">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna10"/>
+						<jr:tableHeader style="Table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="53" height="30" uuid="52afa74b-5363-42bf-bc82-4bd301004e65">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[descr_tipo_animale]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="53" height="30" uuid="5eeae1c9-b506-4878-a85e-3b946396c4bc">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{descr_tipo_animale}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="53" uuid="e740ac33-86b2-42d9-9828-1fa9cfc06831">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna11"/>
+						<jr:tableHeader style="Table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="53" height="30" uuid="a498c874-1fe0-4566-9bad-f261d44292ce">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[descr_stato]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="53" height="30" uuid="298fe7c8-c96f-41da-b2f5-e708dbca9866">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{descr_stato}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="53" uuid="a0c9c21d-e5c9-4c03-812a-e8297c24a78f">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna12"/>
+						<jr:tableHeader style="Table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="53" height="30" uuid="38ed4c10-d0c1-4baa-8379-9e95ce5ba284">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[caratteristiche]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="53" height="30" uuid="d25a80d1-cebf-4ec6-9f70-12da705c4c8e">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+									<property name="net.sf.jasperreports.export.xls.auto.fit.row" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{caratteristiche}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="53" uuid="b1116f4f-636b-45ec-8569-c4132dc553a8">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna13"/>
+						<jr:tableHeader style="Table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="53" height="30" uuid="0c306b9f-e10c-4c2c-bb67-ddc55aba777a">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[sesso]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="53" height="30" uuid="7b5abcf3-339e-45e4-bd1d-45e5bfbcd23e">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{sesso}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="53" uuid="1ba89aed-fc0c-40d2-84b3-22824f7f1385">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna14"/>
+						<jr:tableHeader style="Table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="53" height="30" uuid="4b9a8235-8075-4760-821c-9d2cd72c2e3d">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[tipo_razza]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="53" height="30" uuid="ba4bb51e-104d-4443-883d-992b71d5ee38">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{tipo_razza}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="53" uuid="e6cca902-83fc-44a5-aea7-fe72fd66b834">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna15"/>
+						<jr:tableHeader style="Table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="53" height="30" uuid="6e840194-7ebf-464e-861a-488c42cac29f">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[razza]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="53" height="30" uuid="84f64683-1b23-453f-984d-ac0430de6cfa">
+									<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{razza}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,230 @@
+<div class="grid p-fluid">
+
+    <!-- SEZIONE FOTO -->
+    <div class="col-12">
+        <div class="surface-card p-4 shadow-2 border-round">
+
+            <div class="text-900 font-bold text-lg mb-3 border-bottom-1 surface-border pb-2">
+                <i class="pi pi-images mr-2 text-primary"></i>Galleria Foto
+            </div>
+
+            <!-- Upload nuova foto -->
+            <div class="mb-4 p-4 surface-50 border-round-xl border-1 surface-border">
+                <div class="text-700 font-bold text-sm mb-3 uppercase tracking-wider">
+                    <i class="pi pi-cloud-upload mr-2 text-primary"></i>Carica nuova foto
+                </div>
+
+                <div class="flex flex-wrap gap-3 align-items-end">
+
+                    <!-- File picker -->
+                    <div class="flex flex-column gap-1">
+                        <label class="text-xs font-bold text-500 uppercase">File</label>
+                        <input #fileInput type="file" style="display:none"
+                            (change)="onFileInputChange($event)" />
+                        <p-button [label]="fileDaCaricare ? fileDaCaricare.name : 'Scegli foto'" icon="pi pi-paperclip"
+                            [outlined]="true" [severity]="fileDaCaricare ? 'success' : 'secondary'"
+                            styleClass="white-space-nowrap" (onClick)="fileInput.click()">
+                        </p-button>
+                    </div>
+
+                    <!-- Tipo foto -->
+                    <div class="flex flex-column gap-1">
+                        <label class="text-xs font-bold text-500 uppercase">Tipo foto</label>
+                        <p-selectButton [options]="opzioniTipoFoto" [(ngModel)]="tipoFotoSelezionato"
+                            optionLabel="label" optionValue="value">
+                        </p-selectButton>
+                        @if (tipoFotoSelezionato === '1' && hasFotoProfilo) {
+                          <small class="text-orange-500">
+                            <i class="pi pi-exclamation-triangle mr-1"></i>Sostituirà la foto profilo esistente
+                          </small>
+                        }
+                    </div>
+
+                    <!-- Didascalia -->
+                    <div class="flex flex-column gap-1 flex-1" style="min-width: 200px">
+                        <label class="text-xs font-bold text-500 uppercase">Didascalia</label>
+                        <input pInputText [(ngModel)]="didascalia" placeholder="Descrizione opzionale..."
+                            class="w-full" />
+                    </div>
+
+                    <!-- Pubblica toggle + Carica -->
+                    <div class="flex flex-column gap-2">
+                        <label class="text-xs font-bold text-500 uppercase">Visibilità</label>
+                        <div class="flex gap-2 align-items-center">
+                            <p-toggleButton [(ngModel)]="pubblicaSelezionata" onLabel="Pubblica" offLabel="Privata"
+                                styleClass="white-space-nowrap">
+                            </p-toggleButton>
+                            <p-button label="Carica" icon="pi pi-upload" severity="primary" [loading]="uploadingFoto"
+                                [disabled]="!fileDaCaricare" (onClick)="uploadFoto()">
+                            </p-button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Griglia foto -->
+            @if (foto.length > 0) {
+            <div class="grid">
+                @for (f of foto; track f.id_foto) {
+                <div class="col-6 md:col-3 lg:col-2">
+                    <div class="relative border-round overflow-hidden shadow-1 hover:shadow-4 transition-shadow transition-duration-200"
+                        style="aspect-ratio: 1;">
+                        <img [src]="f.url_t || f.url" [alt]="f.didascalia || f.nome_file" class="w-full h-full"
+                            style="object-fit: cover; cursor: zoom-in;"
+                            (click)="apriGalleria($index)">
+
+                        <!-- Badge profilo -->
+                        @if (f.id_tipo_foto === '1') {
+                        <p-tag value="Profilo" severity="success"
+                            styleClass="absolute top-0 left-0 m-1 text-xs"></p-tag>
+                        }
+                        @if (f.id_tipo_foto === '2') {
+                        <p-tag value="Post-adozione" severity="info"
+                            styleClass="absolute top-0 left-0 m-1 text-xs"></p-tag>
+                        }
+                        @if (f.pubblica === '1') {
+                        <p-tag value="Pubblica" icon="pi pi-eye" severity="warn"
+                            styleClass="absolute top-0 right-0 m-1 text-xs"></p-tag>
+                        }
+                        <!-- Overlay azioni -->
+                        <div class="absolute bottom-0 left-0 right-0 flex justify-content-center gap-1 p-2"
+                            style="background: linear-gradient(transparent, rgba(0,0,0,0.6))">
+                            @if (f.id_tipo_foto !== '1') {
+                              <p-button icon="pi pi-user" pTooltip="Imposta come profilo" [rounded]="true" size="small"
+                                  severity="success" (onClick)="impostaProfilo(f)">
+                              </p-button>
+                            }
+                            <p-button [icon]="f.pubblica === '1' ? 'pi pi-eye-slash' : 'pi pi-eye'"
+                                [pTooltip]="f.pubblica === '1' ? 'Rendi privata' : 'Rendi pubblica'" [rounded]="true"
+                                size="small" severity="secondary" (onClick)="togglePubblica(f)">
+                            </p-button>
+                            <p-button icon="pi pi-trash" pTooltip="Elimina" [rounded]="true" size="small"
+                                severity="danger" (onClick)="eliminaFoto(f)">
+                            </p-button>
+                        </div>
+                    </div>
+                    @if (f.didascalia) {
+                    <small class="text-500 block mt-1 text-center text-xs">{{f.didascalia}}</small>
+                    }
+                </div>
+                }
+            </div>
+            } @else {
+            <div class="text-center p-5 text-500">
+                <i class="pi pi-images text-300 text-5xl mb-3 block"></i>
+                <span class="text-sm">Nessuna foto caricata per questo animale.</span>
+            </div>
+            }
+
+        </div>
+    </div>
+
+    <!-- SEZIONE VIDEO -->
+    <div class="col-12">
+        <div class="surface-card p-4 shadow-2 border-round">
+
+            <div class="text-900 font-bold text-lg mb-3 border-bottom-1 surface-border pb-2">
+                <i class="pi pi-video mr-2 text-primary"></i>Video
+            </div>
+
+            <!-- Aggiunta video tramite URL -->
+            <div class="flex gap-3 align-items-end mb-4 p-3 surface-50 border-round border-1 surface-border">
+                <div class="flex-1">
+                    <label class="font-bold block mb-2 text-sm text-600">URL Video (YouTube o link diretto)</label>
+                    <input pInputText [(ngModel)]="nuovoVideoUrl" placeholder="https://www.youtube.com/watch?v=..."
+                        class="w-full" />
+                </div>
+                <p-button label="Aggiungi" icon="pi pi-plus" severity="primary" [loading]="salvandoVideo"
+                    [disabled]="!nuovoVideoUrl.trim()" (onClick)="aggiungiVideo()">
+                </p-button>
+            </div>
+
+            <!-- Lista video -->
+            @if (video.length > 0) {
+            <div class="grid">
+                @for (v of video; track v.id_video) {
+                <div class="col-12 md:col-6 lg:col-4">
+                    <div class="border-round overflow-hidden shadow-1 surface-50 border-1 surface-border">
+                        @if (isYoutube(v.url)) {
+                        <iframe [src]="getVideoEmbedUrl(v.url) | trustUrl" class="w-full"
+                            style="height: 200px; border: none;" allowfullscreen></iframe>
+                        } @else {
+                        <video [src]="v.url" controls class="w-full" style="height: 200px;"></video>
+                        }
+                        <div class="flex justify-content-between align-items-center p-2">
+                            <small class="text-500 text-xs">{{v.dt_inserimento}}</small>
+                            <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small"
+                                (onClick)="eliminaVideo(v)">
+                            </p-button>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+            } @else {
+            <div class="text-center p-5 text-500">
+                <i class="pi pi-video text-300 text-5xl mb-3 block"></i>
+                <span class="text-sm">Nessun video associato a questo animale.</span>
+            </div>
+            }
+
+        </div>
+    </div>
+
+</div>
+
+<!-- Lightbox -->
+<p-dialog [(visible)]="mostraGalleria" [modal]="true" [closable]="true"
+          [style]="{width: '90vw', 'max-width': '1200px'}"
+          [contentStyle]="{'padding': '0', 'background': '#000'}"
+          [showHeader]="false" appendTo="body">
+  @if (mostraGalleria && foto[indiceGalleria]) {
+    <div class="relative flex align-items-center justify-content-center"
+         style="min-height: 60vh; background:#000;">
+
+      <!-- Freccia sinistra -->
+      <button class="absolute left-0 top-50 z-5 border-none bg-black-alpha-50 text-white
+                     border-circle w-3rem h-3rem flex align-items-center justify-content-center cursor-pointer
+                     hover:bg-black-alpha-80"
+              style="transform: translateY(-50%); margin-left: 0.5rem;"
+              (click)="indiceGalleria = (indiceGalleria - 1 + foto.length) % foto.length">
+        <i class="pi pi-chevron-left text-xl"></i>
+      </button>
+
+      <!-- Immagine -->
+      <img [src]="foto[indiceGalleria].url"
+           [alt]="foto[indiceGalleria].didascalia || foto[indiceGalleria].nome_file"
+           style="max-height: 80vh; max-width: 100%; object-fit: contain; display: block;">
+
+      <!-- Freccia destra -->
+      <button class="absolute right-0 top-50 z-5 border-none bg-black-alpha-50 text-white
+                     border-circle w-3rem h-3rem flex align-items-center justify-content-center cursor-pointer
+                     hover:bg-black-alpha-80"
+              style="transform: translateY(-50%); margin-right: 0.5rem;"
+              (click)="indiceGalleria = (indiceGalleria + 1) % foto.length">
+        <i class="pi pi-chevron-right text-xl"></i>
+      </button>
+
+      <!-- Chiudi -->
+      <button class="absolute top-0 right-0 z-5 border-none bg-black-alpha-50 text-white
+                     border-circle w-2rem h-2rem flex align-items-center justify-content-center cursor-pointer m-2"
+              (click)="mostraGalleria = false">
+        <i class="pi pi-times"></i>
+      </button>
+
+      <!-- Didascalia + contatore -->
+      <div class="absolute bottom-0 left-0 right-0 text-center text-white py-2 px-3"
+           style="background: rgba(0,0,0,0.5);">
+        @if (foto[indiceGalleria].didascalia) {
+          <span>{{foto[indiceGalleria].didascalia}} · </span>
+        }
+        <span class="text-400 text-sm">{{indiceGalleria + 1}} / {{foto.length}}</span>
+      </div>
+
+    </div>
+  }
+</p-dialog>
+
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>

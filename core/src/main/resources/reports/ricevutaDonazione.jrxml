@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final utlizzo versione della libreria JasperReports6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ricevutaDonazione" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b2e7a2bf-c4e4-4d59-ac52-b70049ddfa6b">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="mysql-asso"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="logo_url" class="java.lang.String"/>
+	<parameter name="firma_url" class="java.lang.String"/>
+	<parameter name="id" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[Select
+    a.rag_sociale,
+    d.descrizione,
+    a.indirizzo,
+    a.cf,
+    a.email,
+    a.url,
+    b.importo,
+    c.nome,
+    c.cognome,
+    c.rag_sociale As rag_sociale1,
+    c.cod_fiscale,
+    b.id_movimento,
+    b.dt_operazione,
+    b.id_tipo_destinazione,
+    c.id_tipo_contatto
+From
+    org_movimenti b Inner Join
+    org_anagrafica a On b.id_organizzazione = a.id_organizzazione Inner Join
+    an_contatti c On b.id_contatto = c.id_contatto Inner Join
+    org_x_tipo_organizzazione d On a.id_tipo_organizzazione = d.id_tipo_organizzazione
+where b.id_movimento = $P{id}]]>
+	</queryString>
+	<field name="rag_sociale" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="rag_sociale"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="org_anagrafica"/>
+	</field>
+	<field name="descrizione" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="descrizione"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="org_x_tipo_organizzazione"/>
+	</field>
+	<field name="indirizzo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="indirizzo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="org_anagrafica"/>
+	</field>
+	<field name="cf" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="cf"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="org_anagrafica"/>
+	</field>
+	<field name="email" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="email"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="org_anagrafica"/>
+	</field>
+	<field name="url" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="url"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="org_anagrafica"/>
+	</field>
+	<field name="importo" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="importo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="org_movimenti"/>
+	</field>
+	<field name="nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="cognome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="cognome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="rag_sociale1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="rag_sociale1"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="cod_fiscale" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="cod_fiscale"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="id_movimento" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id_movimento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="org_movimenti"/>
+	</field>
+	<field name="dt_operazione" class="java.sql.Date"/>
+	<field name="id_tipo_destinazione" class="java.lang.String"/>
+	<field name="id_tipo_contatto" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="182" splitType="Stretch">
+			<image>
+				<reportElement x="450" y="9" width="70" height="60" uuid="f22673e9-13d6-4c4e-b238-ed5e34bd4549"/>
+				<imageExpression><![CDATA[$P{logo_url}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="40" y="9" width="290" height="143" uuid="b9358f65-72cf-45b0-8c3a-8e90a610eea6"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[CONCATENATE($F{rag_sociale},"\n",$F{descrizione},"\n",$F{indirizzo},"\n","CF. ",$F{cf},"\n",$F{email},"\n",$F{url})]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="441" splitType="Stretch">
+			<staticText>
+				<reportElement x="40" y="2" width="480" height="19" uuid="e8202c1b-2802-427b-ac95-7096e7d0a255"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DICHIARAZIONE DI RICEVUTA DONAZIONE
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="30" width="480" height="38" uuid="bfc90b65-2c8b-445e-8682-e3b597cf7863"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[La sottoscritta associazione Como Scodinzola, nella persona del suo legale rappresentante Signora Barelli Federica]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="68" width="480" height="19" uuid="00bd8cb9-ac59-465b-89e4-70ab7d93cf7b"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DICHIARA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="197" width="480" height="29" uuid="9dadf9d4-65ed-4069-8f74-9e453fcfa465"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[La presente dichiarazione viene rilasciata per gli usi consentiti dalle vigenti leggi:
+Erogazioni liberali deducibili/detraibili ai sensi dell'Art. 83 D. Lgsl. 117/2017.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="420" y="239" width="100" height="28" uuid="72a7d61b-9cd0-425e-9af4-b4d9353188c7"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Il Presidente
+Federica Barelli]]></text>
+			</staticText>
+			<image>
+				<reportElement x="440" y="267" width="80" height="30" uuid="48a34382-6b5a-422a-a658-a18d9db168bf"/>
+				<imageExpression><![CDATA[$P{firma_url}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="40" y="89" width="480" height="44" uuid="52cc9b4c-dfb5-4658-973a-3d8f9ad57d74"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[CONCATENATE(
+"di aver ricevuto a titolo di liberalità la somma di € ",
+$F{importo}.toString(),
+" in data ",
+DATEFORMAT($F{dt_operazione},"dd/MM/yyyy" ),
+" tramite ",
+$F{id_tipo_destinazione}.equals("2")? $F{id_tipo_destinazione} == "3"?"assegno da :":"bonifico bancario da :":"carta di credito da :"
+)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="139" width="480" height="20" uuid="8bbb91b4-5b89-45f7-bdbf-fafea52a00c2"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rag_sociale1}  == null? 
+	CONCATENATE(CONCATENATE($F{nome}," ",$F{cognome})," - C.F. ",$F{cod_fiscale}):
+	CONCATENATE($F{rag_sociale1}," - P.Iva /C.F. ",$F{cod_fiscale})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

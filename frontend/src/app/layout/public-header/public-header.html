@@ -1,0 +1,45 @@
+<div class="flex flex-column w-full relative z-5 shadow-2">
+    
+    <div class="bg-primary-900 text-white text-sm py-2 px-4 md:px-8 flex justify-content-between align-items-center">
+        <div class="flex gap-4">
+            <span><i class="pi pi-envelope mr-2 text-xs"></i>comoscodinzola@gmail.com</span>
+            <span class="hidden sm:inline"><i class="pi pi-phone mr-2 text-xs"></i>+39 346 3223576</span>
+            <span class="hidden sm:inline"><i class="pi pi-phone mr-2 text-xs"></i>+39 347 0186913</span>
+            <span class="hidden sm:inline"><i class="pi pi-phone mr-2 text-xs"></i>+39 347 9253911</span>
+        </div>
+        <div class="flex gap-3">
+            <i class="pi pi-facebook cursor-pointer hover:text-primary-300"></i>
+            <i class="pi pi-instagram cursor-pointer hover:text-primary-300"></i>
+        </div>
+    </div>
+
+    <div class="bg-white py-3 px-4 md:px-8 flex align-items-center justify-content-between">
+        
+        <a routerLink="/" class="flex align-items-center no-underline text-900 cursor-pointer">
+            <img [src]="logoUrl" height="55" class="mr-3">
+            <div>
+                <div class="font-bold text-xl uppercase tracking-wide" style="color: #1a1a2e;">COMO SCODINZOLA</div>
+                <div class="text-xs text-600 tracking-wider">Associazione Promozione Sociale</div>
+            </div>
+        </a>
+
+        <div class="flex align-items-center gap-4">
+            
+            <a routerLink="/lieti-fine" 
+               routerLinkActive="text-pink-600 font-bold border-bottom-2 border-pink-500 pb-1" 
+               [routerLinkActiveOptions]="{exact: true}"
+               class="hidden md:flex align-items-center text-700 hover:text-pink-500 transition-colors transition-duration-200 cursor-pointer text-lg no-underline mr-2">
+                <i class="pi pi-heart-fill mr-2 text-pink-500"></i>
+                <span>Lieti Fine</span>
+            </a>
+
+            <p-button label="Area Riservata" 
+                      icon="pi pi-lock" 
+                      routerLink="/login" 
+                      severity="secondary" 
+                      [outlined]="true"
+                      styleClass="p-button-sm md:p-button-md">
+            </p-button>
+        </div>
+    </div>
+</div>

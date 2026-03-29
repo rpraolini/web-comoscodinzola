@@ -1,0 +1,111 @@
+<div class="adozione-iter-panel">
+
+  <!-- Header -->
+  <div class="adozione-iter-header flex justify-content-between align-items-center px-3 py-2">
+    <span class="font-bold text-sm">ADOZIONE</span>
+    <div class="flex align-items-center gap-3">
+      @if (iter?.dt_aggiornamento) {
+        <span class="text-xs" style="color: #1a4a7a">
+          Ultimo aggiornamento il {{ iter.dt_aggiornamento }}
+          @if (iter.account) { da {{ iter.account }} }
+        </span>
+      }
+    </div>
+  </div>
+
+  <!-- Form -->
+  <div class="p-3">
+    <div class="grid p-fluid">
+
+      <!-- Riga 1: Adottante | Volontaria -->
+      <div class="col-6">
+        <span class="p-float-label">
+          <p-autoComplete
+            inputId="ai-adottante"
+            [(ngModel)]="form.adottante"
+            [suggestions]="adottantiSuggeriti"
+            (completeMethod)="cercaAdottante($event)"
+            optionLabel="cognome"
+            class="w-full"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+            appendTo="body"
+            [minLength]="2">
+            <ng-template let-c pTemplate="item">
+              <div class="flex flex-column">
+                <span class="font-bold">{{ getNomeContatto(c) }}</span>
+                <small class="text-500">{{ c.desc_provincia }}@if(c.email){ · {{ c.email }}}</small>
+              </div>
+            </ng-template>
+          </p-autoComplete>
+          <label for="ai-adottante">Adottante *</label>
+        </span>
+        @if (form.adottante?.id_contatto) {
+          <p-button icon="pi pi-times" [text]="true" severity="danger" size="small"
+                    class="mt-1" pTooltip="Rimuovi"
+                    (onClick)="form.adottante = null">
+          </p-button>
+        }
+      </div>
+
+      <div class="col-6">
+        <span class="p-float-label">
+          <p-autoComplete
+            inputId="ai-volontaria"
+            [(ngModel)]="form.volontaria"
+            [suggestions]="volontarieSuggerite"
+            (completeMethod)="cercaVolontaria($event)"
+            optionLabel="cognome"
+            class="w-full"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+            appendTo="body"
+            [minLength]="2">
+            <ng-template let-c pTemplate="item">
+              <div class="flex flex-column">
+                <span class="font-bold">{{ getNomeContatto(c) }}</span>
+                <small class="text-500">{{ c.desc_provincia }}</small>
+              </div>
+            </ng-template>
+          </p-autoComplete>
+          <label for="ai-volontaria">Volontaria *</label>
+        </span>
+        @if (form.volontaria?.id_contatto) {
+          <p-button icon="pi pi-times" [text]="true" severity="danger" size="small"
+                    class="mt-1" pTooltip="Rimuovi"
+                    (onClick)="form.volontaria = null">
+          </p-button>
+        }
+      </div>
+
+      <!-- Riga 2: Note -->
+      <div class="col-12 mt-3">
+        <span class="p-float-label">
+          <textarea pInputTextarea id="ai-note"
+                    [(ngModel)]="form.note"
+                    [rows]="3"
+                    class="w-full"
+                    style="resize: vertical;">
+          </textarea>
+          <label for="ai-note">Note</label>
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="flex justify-content-end gap-2 px-3 pb-3">
+    <p-button label="Annulla" icon="pi pi-times" severity="secondary"
+              [outlined]="true" size="small"
+              (onClick)="annulla()">
+    </p-button>
+    <p-button label="Salva" icon="pi pi-save" severity="primary"
+              size="small" [loading]="saving"
+              (onClick)="salva()">
+    </p-button>
+  </div>
+
+</div>
+
+<p-toast></p-toast>

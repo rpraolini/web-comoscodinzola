@@ -14,6 +14,7 @@ public class ContattoAutocompleteDTO {
     private String blacklist;
 
     public String getId_contatto() { return id_contatto; }
+
     public void setId_contatto(String id_contatto) { this.id_contatto = id_contatto; }
 
     public String getNome() { return nome; }

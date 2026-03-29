@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final utlizzo versione della libreria JasperReports6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rendiconto" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ad5a5465-5153-4911-a631-598266a51c0e">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="mysql-asso"/>
+	<parameter name="anno" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[Select
+    Sum(md.importo) As totImporto,
+    s.descrizione sezione,
+    ss.descrizione sotto_sezione,
+    v.descrizione voce,
+    sv.descrizione sottovoce,
+    s.id_sezione,
+    ss.tipo_sotto_sezione tipo_sotto_sezione,
+    ss.id_sotto_sezione,
+    v.id_cr_voce,
+    sv.id_cr_sottovoce
+From
+    org_movimenti_dettaglio md Right Join
+    org_rnd_cr_sottovoci sv On md.id_cr_sottovoce = sv.id_cr_sottovoce Right Join
+    org_rnd_cr_voci v On sv.id_cr_voce = v.id_cr_voce Right Join
+    org_rnd_sotto_sezioni ss On v.id_sotto_sezione = ss.id_sotto_sezione Right Join
+    org_rnd_sezioni s On ss.id_sezione = s.id_sezione Left Join
+    org_movimenti m On md.id_movimento = m.id_movimento
+Where
+    (Year(m.dt_operazione) Is Null Or
+        Year(m.dt_operazione) = $P{anno}) and s.id_sezione = 'A'
+Group By
+    s.descrizione,
+    ss.descrizione,
+    v.descrizione,
+    sv.descrizione,
+    s.id_sezione,
+    ss.tipo_sotto_sezione,
+    ss.id_sotto_sezione,
+    v.id_cr_voce,
+    sv.id_cr_sottovoce
+Order By
+    s.id_sezione,
+    ss.tipo_sotto_sezione,
+    ss.id_sotto_sezione,
+    v.id_cr_voce,
+    sv.id_cr_sottovoce]]>
+	</queryString>
+	<field name="totImporto" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="totImporto"/>
+	</field>
+	<field name="sezione" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sezione"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="org_rnd_sezioni"/>
+	</field>
+	<field name="sotto_sezione" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sotto_sezione"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="org_rnd_sotto_sezioni"/>
+	</field>
+	<field name="voce" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="voce"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="org_rnd_cr_voci"/>
+	</field>
+	<field name="sottovoce" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sottovoce"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="org_rnd_cr_sottovoci"/>
+	</field>
+	<field name="id_sezione" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="id_sezione"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="org_rnd_sezioni"/>
+	</field>
+	<field name="tipo_sotto_sezione" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="tipo_sotto_sezione"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="org_rnd_sotto_sezioni"/>
+	</field>
+	<field name="id_sotto_sezione" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="id_sotto_sezione"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="org_rnd_sotto_sezioni"/>
+	</field>
+	<field name="id_cr_voce" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="id_cr_voce"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="org_rnd_cr_voci"/>
+	</field>
+	<field name="id_cr_sottovoce" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="id_cr_sottovoce"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="org_rnd_cr_sottovoci"/>
+	</field>
+	<variable name="Somma_gruppo_voce" class="java.lang.Double" resetType="Group" resetGroup="voce" calculation="Sum">
+		<variableExpression><![CDATA[$F{totImporto}]]></variableExpression>
+	</variable>
+	<variable name="Somma_gruppo_sezione" class="java.lang.Double" resetType="Group" resetGroup="sezione" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{tipo_sotto_sezione}.equals("I"),$F{totImporto},$F{totImporto}.negate())]]></variableExpression>
+	</variable>
+	<variable name="Somma_tipo_sotto_sezione" class="java.lang.Double" resetType="Group" resetGroup="tipo_sotto_sezione" calculation="Sum">
+		<variableExpression><![CDATA[$F{totImporto}]]></variableExpression>
+	</variable>
+	<group name="sezione">
+		<groupExpression><![CDATA[$F{sezione}]]></groupExpression>
+		<groupHeader>
+			<band height="52">
+				<textField>
+					<reportElement mode="Opaque" x="0" y="0" width="550" height="30" forecolor="#FFFFFF" backcolor="#1323B0" uuid="bd3a59f4-13e1-4f81-bbd0-f8cdc4e82205">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="875ad167-0a72-4ee5-ac7c-845ae329939e"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="16" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["SEZIONE ".concat($F{id_sezione}).concat( " " ).concat( $F{sezione} )]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="30">
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="10" width="450" height="20" forecolor="#FFFFFF" backcolor="#1202C7" uuid="ec5adea6-bfc9-4696-a390-8c58a1489ff1"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Avanzo, disavanzo di esercizio (incassi - pagamenti) : ]]></text>
+				</staticText>
+				<textField pattern="#,##0.00 ¤;#,##0.00- ¤" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="450" y="10" width="100" height="20" forecolor="#FFFFFF" backcolor="#1202C7" uuid="0445955e-3f11-4206-b544-fa74b70dd3ce"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{Somma_gruppo_sezione}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="tipo_sotto_sezione">
+		<groupExpression><![CDATA[$F{tipo_sotto_sezione}]]></groupExpression>
+		<groupFooter>
+			<band height="43">
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="0" y="12" width="450" height="20" forecolor="#FFFFFF" backcolor="#733028" uuid="e4c61a67-4b44-452f-ae7f-71a234ee5bdc"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{tipo_sotto_sezione}.equals("I"),"Totale Incassi : ","Totale Pagamenti : ")]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00 ¤;#,##0.00- ¤" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="450" y="12" width="100" height="20" forecolor="#FFFFFF" backcolor="#733028" uuid="74002d0d-287e-4809-8777-9b4d9c766a66"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{tipo_sotto_sezione}.equals("I"),$V{Somma_tipo_sotto_sezione},$V{Somma_tipo_sotto_sezione}*-1)]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="sotto_sezione">
+		<groupExpression><![CDATA[$F{sotto_sezione}]]></groupExpression>
+		<groupHeader>
+			<band height="39">
+				<textField>
+					<reportElement mode="Opaque" x="0" y="9" width="550" height="30" forecolor="#FFFFFF" backcolor="#1323B0" uuid="1930fc40-0eb6-402f-ac58-3b3d2993ceab">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e339c87f-159d-4425-9019-2739f35c0407"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{id_sotto_sezione}.concat(" ").concat($F{sotto_sezione})]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="voce" keepTogether="true">
+		<groupExpression><![CDATA[$F{voce}]]></groupExpression>
+		<groupHeader>
+			<band height="30">
+				<textField>
+					<reportElement mode="Opaque" x="0" y="0" width="550" height="30" forecolor="#000000" backcolor="#BFD8F2" uuid="a3887262-79a7-4517-8114-2daba1579d9f">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2417727a-35bf-4658-8366-feb6600d0203"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{id_cr_voce}.concat(" ").concat($F{voce})]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<textField pattern="#,##0.00 ¤;#,##0.00- ¤" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="450" y="0" width="100" height="20" backcolor="#94C0F2" uuid="f42bbd69-e267-40b2-844b-3c256bc746ef"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{Somma_gruppo_voce}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="0" y="0" width="450" height="20" backcolor="#94C0F2" uuid="2c9eb008-ce11-4ab4-88c0-88a54fe41835"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Sub Totale ".concat($F{id_cr_voce}).concat("   -   ")]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="sottovoce">
+		<groupExpression><![CDATA[$F{sottovoce}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="54" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="4" width="550" height="30" forecolor="#FFFFFF" backcolor="#1323B0" uuid="4d810016-f88e-4902-a0df-323e2700d3ac"/>
+				<textElement>
+					<font size="16" isBold="true"/>
+					<paragraph lineSpacing="Double"/>
+				</textElement>
+				<text><![CDATA[RENDICONTO ASSOCIAZIONE PROMOZIONE SOCIALE PER CASSA]]></text>
+			</staticText>
+			<textField pattern="dd MMMMM yyyy">
+				<reportElement x="0" y="34" width="90" height="20" uuid="9c7397a2-3e71-4ae2-87d5-a0a95ea44b87"/>
+				<textFieldExpression><![CDATA["Report generato il : "]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd MMMMM yyyy">
+				<reportElement x="90" y="34" width="150" height="20" uuid="ee268f55-439a-4442-9782-36ce5db3f2ec"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="450" height="23" uuid="e9c61685-5111-4880-bcc4-f7963ba1a2ef">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="dc47b5a7-f6c0-4415-a3c3-8d6f5bceb9c0"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0" lineColor="#808080"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{id_cr_sottovoce}.concat(" ").concat($F{sottovoce})]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00 ¤;#,##0.00- ¤" isBlankWhenNull="true">
+				<reportElement x="450" y="0" width="100" height="23" uuid="d4df09c1-ab51-42e0-82a5-beb8478de622">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="75700603-7904-4a70-b666-3b23017f8ae5"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0" lineColor="#808080"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{totImporto}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

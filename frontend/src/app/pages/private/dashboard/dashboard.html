@@ -1,0 +1,240 @@
+<p-toast></p-toast>
+<div class="mx-auto" style="max-width: 1400px;">
+
+    <p-toolbar styleClass="mb-4 bg-white border-round-xl shadow-1 border-none">
+        <div class="p-toolbar-group-start">
+            <span class="text-xl text-900 font-bold">Ultimi animali inseriti</span>
+        </div>
+        <div class="p-toolbar-group-end">
+            <p-button label="Nuovo" icon="pi pi-plus" severity="success" (click)="apriNuovo()"></p-button>
+        </div>
+    </p-toolbar>
+
+    <div class="surface-card p-4 border-round-xl shadow-1 mb-4">
+
+        <div class="flex flex-column md:flex-row gap-3 align-items-center justify-content-between mb-3">
+            <div class="p-inputgroup w-full md:w-6">
+                <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>&nbsp;
+                <input type="text" pInputText placeholder="Ricerca per nome o microchip..." [(ngModel)]="filtri.search"
+                    (keyup.enter)="eseguiRicerca()" />&nbsp;
+                <p-button label="Cerca" severity="success" (onClick)="eseguiRicerca()"></p-button>
+            </div>
+
+            <div class="flex align-items-center gap-3 w-full md:w-auto justify-content-between md:justify-content-end">
+                <span class="text-600 text-sm">Trovati {{ animali.length }} animali.</span>
+                <a (click)="toggleFiltri()" class="text-primary font-medium cursor-pointer hover:underline text-sm">
+                    {{ mostraFiltriAvanzati ? 'Chiudi ricerca avanzata' : 'Apri ricerca avanzata' }}
+                </a>
+            </div>
+        </div>
+
+        <div *ngIf="mostraFiltriAvanzati" class="grid pt-4 border-top-1 surface-border mt-2">
+            <div class="col-12 md:col-3"><p-select [options]="opzioniSesso" [(ngModel)]="filtri.sesso" placeholder="Sesso..." styleClass="w-full"></p-select></div>
+            <div class="col-12 md:col-3"><p-select [options]="opzioniEta" [(ngModel)]="filtri.eta" placeholder="Età..." styleClass="w-full"></p-select></div>
+            <div class="col-12 md:col-3"><p-select [options]="opzioniVaccini" [(ngModel)]="filtri.vaccini" placeholder="Vaccini..." styleClass="w-full"></p-select></div>
+            <div class="col-12 md:col-3"><p-select [options]="regioni" (onChange)="onRegioneChange($event)" [(ngModel)]="filtri.regione" optionLabel="nome" optionValue="id" placeholder="Regione..." styleClass="w-full"></p-select></div>
+            <div class="col-12 md:col-3"><p-select [options]="province" [(ngModel)]="filtri.provincia" optionLabel="nome" optionValue="id" [filter]="true" placeholder="Provincia..." styleClass="w-full"></p-select></div>
+            <div class="col-12 md:col-3"><p-select [options]="listaStati" [(ngModel)]="filtri.stato" optionLabel="descr_stato" optionValue="id_stato" [filter]="true" placeholder="Stato..." styleClass="w-full"></p-select></div>
+            <div class="col-12 md:col-3"><p-select [options]="listaTags" [(ngModel)]="filtri.tag" optionLabel="tag" optionValue="id_tag" [filter]="true" placeholder="Tag..." styleClass="w-full"></p-select></div>
+            <div class="col-12 md:col-3"><p-select [options]="opzioniTipo" [(ngModel)]="filtri.tipoAnimale" placeholder="Tipo Animale..." styleClass="w-full"></p-select></div>
+        </div>
+    </div>
+
+    <div class="surface-card p-0 border-round-xl shadow-1 overflow-hidden">
+        <p-table [value]="animali" 
+                [lazy]="true" 
+                (onLazyLoad)="onLazyLoad($event)"
+                [paginator]="true" 
+                [rows]="10" 
+                [totalRecords]="totalRecords" 
+                [loading]="loading" 
+                [rowsPerPageOptions]="[10, 20, 50]"
+                [rowHover]="true" 
+                styleClass="p-datatable-striped">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 5%">Tipo</th>
+                    <th>Nome</th>
+                    <th>Regione</th>
+                    <th>Taglia</th>
+                    <th>Età</th>
+                    <th>Periodo</th>
+                    <th>Stato</th>
+                    <th style="width: 10%; text-align: center">Azioni</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-animale>
+                <tr>
+                    <td>
+                        <i class="fa-solid fa-dog text-xl text-600" *ngIf="animale.id_tipo_animale == '1'"></i>
+                        <i class="fa-solid fa-cat text-xl text-600" *ngIf="animale.id_tipo_animale == '2'"></i>
+                    </td>
+                    <td class="font-bold text-900">
+                        <i class="pi pi-mars text-blue-500 mr-2 font-bold" *ngIf="animale.sesso === 'M'"
+                            style="font-size: 1.1rem"></i>
+                        <i class="pi pi-venus text-pink-500 mr-2 font-bold" *ngIf="animale.sesso === 'F'"
+                            style="font-size: 1.1rem"></i>
+                        {{animale.nome}}
+                    </td>
+
+                    <td>{{animale.regione}}</td>
+                    <td>{{animale.taglia}}</td>
+                    <td>{{animale.eta}}</td>
+                    <td>{{animale.periodo}}</td>
+                    <td>
+                        <div class="flex align-items-center">
+                            <div class="border-circle mr-2" [style.background-color]="animale.coloreStato || '#9fa6b2'"
+                                style="width: 12px; height: 12px; border: 1px solid rgba(0,0,0,0.1)">
+                            </div>
+
+                            <span class="font-bold" [style.color]="animale.coloreStato || '#4b5563'">
+                                {{ animale.descr_stato }}
+                            </span>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <button pButton icon="pi pi-pencil" 
+                        class="p-button-rounded p-button-text" 
+                        (click)="vaiAlDettaglio(animale.id_animale)">    
+                </button>
+                
+                <button pButton icon="pi pi-trash" 
+                        class="p-button-rounded p-button-text p-button-danger" 
+                        (click)="confermaEliminazione(animale)">
+                </button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+</div>
+
+<p-dialog header="Nuovo animale" [(visible)]="displayNuovoDialog" 
+          [modal]="true" [style]="{width: '70vw', minWidth: '650px'}" 
+          [contentStyle]="{'overflow': 'visible'}" [draggable]="false"
+          styleClass="custom-modal shadow-8">
+    
+    <div class="p-2">
+        <div class="flex align-items-center mb-3 text-primary border-bottom-1 surface-border pb-2">
+            <i class="pi pi-info-circle mr-2 text-xl"></i>
+            <span class="font-bold text-lg uppercase tracking-wider">Informazioni Base</span>
+        </div>
+        
+        <div class="grid p-fluid mb-4">
+            <div class="col-12 md:col-4">
+                <label class="block font-bold mb-2 text-800 text-sm">Tipo di animale *</label>
+                <p-select [options]="opzioniTipo" [(ngModel)]="nuovoAnimale.id_tipo_animale" 
+                          optionLabel="label" optionValue="value" appendTo="body" placeholder="Seleziona"></p-select>
+            </div>
+
+            <div class="col-12 md:col-4">
+                <label class="block font-bold mb-2 text-800 text-sm">Nome *</label>
+                <div class="relative">
+                    <input pInputText 
+               [(ngModel)]="nuovoAnimale.nome" 
+               maxlength="20" 
+               placeholder="Inserisci nome" 
+               class="w-full"
+               style="padding-right: 3.5rem;" /> <small class="text-400" 
+               style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); pointer-events: none; font-size: 0.85rem;">
+               {{nuovoAnimale.nome?.length || 0}}/20
+        </small>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-4">
+                <label class="block font-bold mb-2 text-800 text-sm">Data nascita *</label>
+                <div class="flex flex-column gap-1">
+                    <p-datepicker [(ngModel)]="nuovoAnimale.dt_nascita" (onSelect)="calcolaEtaDallaData($event)"
+                                  [maxDate]="oggi" dateFormat="dd/mm/yy" [showIcon]="true" appendTo="body"></p-datepicker>
+                    <div class="h-1rem"> <p-tag *ngIf="nuovoAnimale.eta" [value]="nuovoAnimale.eta" severity="success" [rounded]="true" styleClass="text-xs"></p-tag>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex align-items-center mb-3 text-primary border-bottom-1 surface-border pb-2">
+            <i class="pi pi-shield mr-2 text-xl"></i>
+            <span class="font-bold text-lg uppercase tracking-wider">Fisico e Identificazione</span>
+        </div>
+
+        <div class="grid p-fluid mb-4">
+            <div class="col-12 md:col-4">
+                <label class="block font-bold mb-2 text-800 text-sm">Microchip *</label>
+                <div class="p-inputgroup">
+                    <p-inputmask 
+                        [(ngModel)]="nuovoAnimale.num_microchip" 
+                        mask="999999999999999" 
+                        placeholder="15 cifre"
+                        [unmask]="true"
+                        styleClass="w-full">
+                    </p-inputmask>
+                </div>
+                <small class="text-500 italic block mt-1">Formato richiesto: 15 numeri</small>
+            </div>
+
+            <div class="col-12 md:col-4">
+                <label class="block font-bold mb-2 text-800 text-sm">Colore</label>
+                <p-select [options]="listaColori" [(ngModel)]="nuovoAnimale.id_colore" 
+                          optionLabel="descr_colore" optionValue="id_colore" appendTo="body" [filter]="true" placeholder="Seleziona un colore"></p-select>
+            </div>
+
+            <div class="col-12 md:col-4">
+                <label class="block font-bold mb-2 text-800 text-sm">Peso</label>
+                <div class="p-inputgroup">
+                    <p-inputnumber [(ngModel)]="nuovoAnimale.peso" [minFractionDigits]="2" placeholder="0.00"></p-inputnumber>
+                    <span class="p-inputgroup-addon bg-bluegray-50 font-bold text-600">kg</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex align-items-center mb-3 text-primary border-bottom-1 surface-border pb-2">
+            <i class="pi pi-star-fill mr-2 text-xl"></i>
+            <span class="font-bold text-lg uppercase tracking-wider">Dettagli Razza</span>
+        </div>
+
+        <div class="grid p-fluid align-items-start">
+            <div class="col-12 md:col-4">
+                <label class="block font-bold mb-2 text-800 text-sm">Sesso *</label>
+                <p-selectbutton [options]="[{label: 'Maschio', value: 'M'}, {label: 'Femmina', value: 'F'}]" 
+                                [(ngModel)]="nuovoAnimale.sesso" optionLabel="label" optionValue="value"
+                                styleClass="custom-selectbutton"></p-selectbutton>
+            </div>
+
+            <div class="col-12 md:col-4">
+                <label class="block font-bold mb-2 text-800 text-sm">Razza</label>
+                <p-select [options]="listaRazze" [(ngModel)]="nuovoAnimale.id_razza" 
+                          optionLabel="razza" optionValue="id_razza" [filter]="true" appendTo="body" placeholder="Cerca razza..."></p-select>
+            </div>
+
+            <div class="col-12 md:col-4">
+                <label class="block font-bold mb-2 text-800 text-sm">Tipo di razza</label>
+                <p-selectbutton [options]="[{label: 'Pura', value: '1'}, {label: 'Simile', value: '0'}]" 
+                                [(ngModel)]="nuovoAnimale.tipo_razza" optionLabel="label" optionValue="value"></p-selectbutton>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <label class="block font-bold mb-2 text-800 text-sm italic">Caratteristiche / Note aggiuntive</label>
+            <textarea pTextarea [(ngModel)]="nuovoAnimale.caratteristiche" rows="3" class="w-full" style="resize: none;" placeholder="Note ..."></textarea>
+        </div>
+    </div>
+
+    <div *ngIf="erroriValidazione.length > 0" class="mt-3 animation-duration-200 fadein">
+        <p-message severity="error" icon="pi pi-exclamation-triangle" 
+                   text="Compila tutti i campi obbligatori (*) per procedere" styleClass="w-full"></p-message>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="flex justify-content-between align-items-center pt-2">
+            <span class="text-500 text-xs italic">* Campi obbligatori</span>
+            <div class="flex gap-2">
+                <p-button label="Annulla" icon="pi pi-times" (click)="displayNuovoDialog=false" severity="secondary" [text]="true"></p-button>
+                <p-button label="Salva Animale" icon="pi pi-save" (click)="salvaNuovo()" severity="success" class="p-button-raised shadow-3"></p-button>
+            </div>
+        </div>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog></p-confirmDialog>

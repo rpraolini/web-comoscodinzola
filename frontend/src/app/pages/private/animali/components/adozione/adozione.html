@@ -1,0 +1,384 @@
+<div class="grid p-fluid">
+
+  <!-- TOOLBAR -->
+  <div class="col-12">
+    <div class="flex justify-content-between align-items-center mb-3">
+      <span class="text-900 font-bold text-lg">
+        <i class="pi pi-home mr-2 text-primary"></i>Adozione
+      </span>
+      <div class="flex gap-2">
+        @if (isAdottabile) {
+          <p-button label="Rendi Adottabile" icon="pi pi-heart" severity="success"
+                    (onClick)="rendiAdottabile()">
+          </p-button>
+        }
+        @if (isRevocaAdottabile) {
+          <p-button label="Revoca Adottabile" icon="pi pi-times-circle" severity="warn"
+                    [outlined]="true" (onClick)="revocaAdottabile()">
+          </p-button>
+        }
+        @if (animale?.id_stato === '3' || istruttoriaChiusa || !haPraticaAttiva) {
+          <p-button label="Nuova pratica" icon="pi pi-folder-open" severity="primary"
+                    [disabled]="haPraticaAttiva"
+                    pTooltip="Chiudi la pratica attiva prima di aprirne una nuova"
+                    [tooltipDisabled]="!haPraticaAttiva"
+                    (onClick)="nuovaPratica()">
+          </p-button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- PRATICHE -->
+  @if (pratiche.length > 0) {
+    @for (pratica of pratiche; track pratica.id_pratica) {
+      <div class="col-12">
+        <div class="surface-card p-4 shadow-2 border-round mb-3">
+
+          <!-- Header pratica -->
+          <div class="flex justify-content-between align-items-center mb-3
+                      border-bottom-1 surface-border pb-2">
+            <div class="flex align-items-center gap-3">
+              <i class="pi pi-folder text-primary text-xl"></i>
+              <div>
+                <span class="font-bold text-900">Pratica {{pratica.id_pratica}}</span>
+                <p-tag [value]="pratica.stato"
+                       [severity]="pratica.isAperta ? 'success' : 'secondary'"
+                       styleClass="ml-2 text-xs">
+                </p-tag>
+              </div>
+              <small class="text-400">
+                <i class="pi pi-clock mr-1"></i>{{pratica.dt_aggiornamento}}
+                @if (pratica.account) { · {{pratica.account}} }
+              </small>
+            </div>
+
+            <div class="flex gap-2">
+              @if (pratica.isAperta && !istruttoriaChiusa) {
+                <p-button label="Aggiungi iter" icon="pi pi-plus" severity="primary"
+                          size="small" [outlined]="true"
+                          [disabled]="(pratica.iter?.length || 0) >= 4"
+                          (onClick)="apriNuovoIter(pratica)">
+                </p-button>
+              }
+              @if (pratica.isAperta) {
+                <p-button label="Chiudi" icon="pi pi-lock" severity="warn"
+                          size="small" [outlined]="true"
+                          (onClick)="chiudiPratica(pratica)">
+                </p-button>
+              }
+              @if (!istruttoriaChiusa) {
+                <p-button icon="pi pi-trash" severity="danger" size="small"
+                          [text]="true" pTooltip="Elimina pratica"
+                          (onClick)="eliminaPratica(pratica)">
+                </p-button>
+              }
+            </div>
+          </div>
+
+          <!-- Pannello iter inline -->
+          @if (iterPanelAperto?.pratica?.id_pratica === pratica.id_pratica) {
+            <div class="mb-3 border-round overflow-hidden border-1 surface-border">
+              @if (iterPanelAperto!.tipo === '1') {
+                <app-preaffido
+                  [iter]="iterPanelAperto!.iter"
+                  [idPratica]="pratica.id_pratica"
+                  [idAnimale]="idAnimale"
+                  (salvato)="onPreaffidoSalvato()"
+                  (annullato)="chiudiIterPanel()"
+                  >
+                </app-preaffido>
+              }
+              @if (iterPanelAperto!.tipo === '2') {
+                <app-adozione-iter
+                  [iter]="iterPanelAperto!.iter"
+                  [idPratica]="pratica.id_pratica"
+                  [idAnimale]="idAnimale"
+                  (salvato)="onPreaffidoSalvato()"
+                  (annullato)="chiudiIterPanel()">
+                </app-adozione-iter>
+              }
+              @if (iterPanelAperto!.tipo === '3') {
+                <app-consegna
+                  [iter]="iterPanelAperto!.iter"
+                  [pratica]="pratica"
+                  [idPratica]="pratica.id_pratica"
+                  [idAnimale]="idAnimale"
+                  (salvato)="onPreaffidoSalvato()"
+                  (annullato)="chiudiIterPanel()">
+                </app-consegna>
+              }
+              @if (iterPanelAperto!.tipo === '4') {
+                <app-passaggio
+                  [iter]="iterPanelAperto!.iter"
+                  [pratica]="pratica"
+                  [animale]="animale"
+                  [idPratica]="pratica.id_pratica"
+                  [idAnimale]="idAnimale"
+                  (salvato)="onPreaffidoSalvato()"
+                  (annullato)="chiudiIterPanel()">
+                </app-passaggio>
+              }
+            </div>
+          }
+
+          <!-- Iter della pratica -->
+          @if (pratica.iter?.length > 0) {
+            <div class="flex flex-column gap-2">
+              @for (iter of pratica.iter; track iter.id_iter) {
+                <div class="border-round border-1 surface-border overflow-hidden"
+                     [style.border-left]="'5px solid ' + getColoreIter(iter.colore)">
+
+                  <!-- Header card iter -->
+                  <div class="flex justify-content-between align-items-center px-3 py-2 surface-50
+                              border-bottom-1 surface-border">
+                    <div class="flex align-items-center gap-2">
+                      <p-tag [value]="iter.tipo_iter"
+                             [icon]="getIconaIter(iter.id_tipo_iter)"
+                             [style]="{'background-color': getColoreIter(iter.colore),
+                                       'font-size': '1rem',
+                                       'padding': '0.35rem 0.7rem',
+                                       'letter-spacing': '0.03em'}">
+                      </p-tag>
+                      @if (iter.adottante) {
+                        <span class="font-semibold text-sm text-900">
+                          — {{getNomeContatto(iter.adottante)}}
+                        </span>
+                      }
+                      <span class="text-400 text-xs">
+                        <i class="pi pi-clock mr-1"></i>{{iter.dt_aggiornamento}}
+                        @if (iter.account) { · {{iter.account}} }
+                      </span>
+                    </div>
+                    <div class="flex gap-1">
+                      @if (pratica.isAperta && !istruttoriaChiusa) {
+                        @if (iter.id_tipo_iter !== '4') {
+                          <p-button icon="pi pi-pencil" [text]="true" severity="secondary"
+                                    size="small" pTooltip="Modifica"
+                                    (onClick)="apriModificaIter(iter, pratica)">
+                          </p-button>
+                        }
+                        <p-button icon="pi pi-trash" [text]="true" severity="danger"
+                                  size="small" pTooltip="Elimina"
+                                  [disabled]="!isUltimoIter(iter, pratica)"
+                                  (onClick)="eliminaIter(iter)">
+                        </p-button>
+                      }
+                    </div>
+                  </div>
+
+                  <!-- Corpo card -->
+                  <div class="px-3 py-2">
+
+                    <!-- Dettaglio PREAFFIDO (tipo 1) -->
+                    @if (iter.id_tipo_iter === '1') {
+                      <div class="grid text-sm">
+                        <div class="col-6 flex flex-column gap-1">
+                          <div>Località : <strong>{{iter.localita || ''}}</strong></div>
+                          <div>Telefono : <strong>{{iter.telefono || ''}}</strong></div>
+                          <div>Data del colloquio : <strong>{{iter.dt_colloquio || ''}}</strong></div>
+                          <div>Esito :
+                            @if (iter.esito) {
+                              <strong [class.text-green-600]="iter.esito === 'P'"
+                                      [class.text-red-500]="iter.esito === 'N'">
+                                {{iter.esito === 'P' ? 'Positivo' : 'Negativo'}}
+                              </strong>
+                            }
+                          </div>
+                          @if (iter.quest_key) {
+                            <div class="flex align-items-center gap-2">
+                              <a class="flex align-items-center gap-1 text-primary no-underline hover:underline cursor-pointer"
+                                 (click)="scaricaQuestionarioPdf(iter.id_iter, iter.quest_key); $event.preventDefault(); $event.stopPropagation()">
+                                <i class="pi pi-file-pdf text-red-500"></i>Scarica questionario
+                              </a>
+                            </div>
+                          }
+                        </div>
+                        <div class="col-6 flex flex-column gap-1">
+                          <div>Volontaria : <strong>{{getNomeContatto(iter.volontaria)}}</strong></div>
+                          <div>Email : <strong>{{iter.email || ''}}</strong></div>
+                          @if (iter.contatto) {
+                            <div>Colloquio preaffido fatto da: <strong>{{getNomeContatto(iter.contatto)}}</strong></div>
+                          }
+                          @if (iter.quest_key) {
+                            <div>Identificativo questionario online : <strong class="text-xs">{{iter.quest_key}}</strong></div>
+                          }
+                          <div>
+                            @if (iter.quest_f === 'R') { Questionario ritornato }
+                            @else if (iter.quest_f === 'I') { Questionario inviato }
+                            @else { Non ancora inviato }
+                          </div>
+                          <div>
+                            @if (iter.quest_ritorno) { Ritornato }
+                            @else if (iter.quest_invio) { Inviato }
+                          </div>
+                        </div>
+                      </div>
+                      @if (iter.note) {
+                        <div class="mt-1 text-sm">Note : <strong>{{iter.note}}</strong></div>
+                      }
+                    }
+
+                    <!-- Dettaglio ADOZIONE (tipo 2) -->
+                    @if (iter.id_tipo_iter === '2') {
+                      <div class="grid text-sm">
+                        <div class="col-6 flex flex-column gap-1">
+                          @if (iter.adottante) {
+                            <div>Adottante : <strong>{{getNomeContatto(iter.adottante)}}</strong></div>
+                            @if (iter.adottante.localita || iter.adottante.desc_provincia) {
+                              <div>Abitante a : <strong>
+                                {{iter.adottante.localita}}{{iter.adottante.localita && iter.adottante.desc_provincia ? ' (' + iter.adottante.desc_provincia + ')' : iter.adottante.desc_provincia}}
+                              </strong></div>
+                            }
+                            @if (iter.adottante.email) {
+                              <div>Email adottante : <strong>{{iter.adottante.email}}</strong></div>
+                            }
+                          }
+                        </div>
+                        <div class="col-6 flex flex-column gap-1">
+                          @if (iter.volontaria) {
+                            <div>Volontaria : <strong>{{getNomeContatto(iter.volontaria)}}</strong></div>
+                            @if (iter.volontaria.telefono || iter.volontaria.cellulare) {
+                              <div>Telefono/cellulare : <strong>
+                                {{iter.volontaria.cellulare || iter.volontaria.telefono}}
+                              </strong></div>
+                            }
+                          }
+                        </div>
+                      </div>
+
+                      <!-- PDF download -->
+                      <div class="mt-2 pt-2 border-top-1 surface-border">
+                        @if (hasMicrochip) {
+                          <a class="flex align-items-center gap-2 text-sm text-primary
+                                    no-underline hover:underline cursor-pointer"
+                             style="width:fit-content"
+                             (click)="apriFinestraPdf(iter.id_iter); $event.preventDefault(); $event.stopPropagation()">
+                            <i class="pi pi-file-pdf text-red-500 text-lg"></i>
+                            Scarica documento di affido (non firmato)
+                          </a>
+                        } @else {
+                          <span class="text-xs text-orange-500">
+                            <i class="pi pi-exclamation-triangle mr-1"></i>
+                            Inserire il microchip per scaricare il modulo di preaffido
+                          </span>
+                        }
+                      </div>
+                    }
+
+                    <!-- Dettaglio CONSEGNA (tipo 3) -->
+                    @if (iter.id_tipo_iter === '3') {
+                      <div class="grid text-sm">
+                        <div class="col-6 flex flex-column gap-1">
+                          @if (iter.adottante) {
+                            <div>Adottante consegna : <strong>{{getNomeContatto(iter.adottante)}}</strong></div>
+                            @if (iter.adottante.cellulare || iter.adottante.telefono_1) {
+                              <div>Telefono/cellulare : <strong>{{iter.adottante.cellulare || iter.adottante.telefono_1}}</strong></div>
+                            }
+                            @if (iter.adottante.email) {
+                              <div>Email adottante : <strong>{{iter.adottante.email}}</strong></div>
+                            }
+                          }
+                          @if (iter.dt_consegna) {
+                            <div>Data consegna : <strong>{{iter.dt_consegna}}</strong></div>
+                          }
+                        </div>
+                        <div class="col-6 flex flex-column gap-1">
+                          @if (iter.adottante?.localita || iter.adottante?.desc_provincia) {
+                            <div>Abitante a : <strong>
+                              {{iter.adottante.localita}}{{iter.adottante.localita && iter.adottante.desc_provincia ? ' (' + iter.adottante.desc_provincia + ')' : iter.adottante.desc_provincia}}
+                            </strong></div>
+                          }
+                          @if (iter.contributo !== null && iter.contributo !== undefined) {
+                            <div>Contributo : <strong>{{iter.contributo === '1' ? 'SI' : 'NO'}}</strong></div>
+                          }
+                        </div>
+                      </div>
+
+                      <!-- Documenti allegati -->
+                      @for (doc of iter.documenti; track $index) {
+                        @for (file of doc.assoFiles; track $index) {
+                          <div class="flex align-items-center gap-2 text-sm mt-1">
+                            <strong>{{doc.tipoDocumento?.documento}}</strong>
+                            <a class="text-primary no-underline hover:underline cursor-pointer"
+                               (click)="scaricaFile(file.id_file, file.filename)">
+                              {{file.filename}}
+                            </a>
+                          </div>
+                        }
+                      }
+                    }
+
+                    <!-- Dettaglio PASSAGGIO (tipo 4) — usa il componente in cardMode -->
+                    @if (iter.id_tipo_iter === '4') {
+                      <app-passaggio
+                        [iter]="iter"
+                        [pratica]="pratica"
+                        [animale]="animale"
+                        [idPratica]="pratica.id_pratica"
+                        [idAnimale]="idAnimale"
+                        [cardMode]="true"
+                        (salvato)="caricaTutto()">
+                      </app-passaggio>
+                    }
+
+                    <!-- Dettaglio generico (altri tipi) -->
+                    @if (iter.id_tipo_iter !== '2' && iter.id_tipo_iter !== '3' && iter.id_tipo_iter !== '4') {
+                      <div class="flex flex-wrap gap-3 text-sm text-600">
+                        @if (iter.dt_colloquio) {
+                          <span><i class="pi pi-calendar mr-1 text-primary"></i>Colloquio: <strong>{{iter.dt_colloquio}}</strong></span>
+                        }
+                        @if (iter.dt_consegna) {
+                          <span><i class="pi pi-check-circle mr-1 text-green-500"></i>Consegna: <strong>{{iter.dt_consegna}}</strong></span>
+                        }
+                        @if (iter.volontaria) {
+                          <span><i class="pi pi-heart mr-1 text-pink-400"></i>{{getNomeContatto(iter.volontaria)}}</span>
+                        }
+                        @if (iter.contributo && iter.contributo !== '0') {
+                          <span><i class="pi pi-euro mr-1 text-green-500"></i>{{iter.contributo}} €</span>
+                        }
+                        @if (iter.id_tipo_iter === '1' && iter.esito) {
+                          <span [class.text-green-600]="iter.esito === 'P'"
+                                [class.text-red-500]="iter.esito === 'N'">
+                            <i [class]="iter.esito === 'P' ? 'pi pi-check-circle' : 'pi pi-times-circle'"></i>
+                            Esito: <strong>{{iter.esito === 'P' ? 'Positivo' : 'Negativo'}}</strong>
+                          </span>
+                        }
+                      </div>
+                    }
+
+                    <!-- Note -->
+                    @if (iter.note) {
+                      <div class="text-xs text-600 surface-50 border-round p-2 mt-2">
+                        <i class="pi pi-comment mr-1"></i>{{iter.note}}
+                      </div>
+                    }
+
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="text-center p-4 text-500 text-sm">
+              <i class="pi pi-info-circle mr-1"></i>
+              Nessun iter. Clicca "Aggiungi iter" per iniziare con il Preaffido.
+            </div>
+          }
+
+        </div>
+      </div>
+    }
+  } @else {
+    <div class="col-12">
+      <div class="text-center p-6 surface-card border-round shadow-1 text-500">
+        <i class="pi pi-home text-300 text-5xl mb-3 block"></i>
+        <span class="text-sm">Nessuna pratica di adozione. Clicca "Nuova pratica" per iniziare.</span>
+      </div>
+    </div>
+  }
+
+</div>
+
+
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>

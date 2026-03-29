@@ -1,0 +1,159 @@
+<div class="consegna-panel">
+
+  <!-- Header -->
+  <div class="consegna-header flex justify-content-between align-items-center px-3 py-2">
+    <span class="font-bold text-sm">
+      CONSEGNA@if (nomeAdottante !== '—') { - {{ nomeAdottante }} }
+    </span>
+    @if (iter?.dt_aggiornamento) {
+      <span class="text-xs" style="color: #2d6a2d">
+        Ultimo aggiornamento il {{ iter.dt_aggiornamento }}
+        @if (iter.account) { da {{ iter.account }} }
+      </span>
+    }
+  </div>
+
+  <!-- Form -->
+  <div class="p-3">
+    <div class="grid p-fluid">
+
+      <!-- Riga 1: Adottante | Data consegna | Contributo -->
+      <div class="col-4">
+        <div class="flex flex-column gap-1">
+          <label class="text-xs text-500">Adottante</label>
+          <span class="font-semibold text-sm border-bottom-1 surface-border pb-1">
+            {{ nomeAdottante }}
+          </span>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <span class="p-float-label">
+          <p-datepicker inputId="cs-dtconsegna"
+                        [(ngModel)]="form.dt_consegna"
+                        dateFormat="dd/mm/yy"
+                        [showIcon]="true"
+                        appendTo="body"
+                        styleClass="w-full">
+          </p-datepicker>
+          <label for="cs-dtconsegna">Data consegna *</label>
+        </span>
+      </div>
+
+      <div class="col-4 flex align-items-center justify-content-end gap-3">
+        <span class="text-sm text-500">Contributo:</span>
+        <div class="flex align-items-center gap-2">
+          <p-radioButton inputId="cs-cont-si" name="contributo"
+                         value="1" [(ngModel)]="form.contributo">
+          </p-radioButton>
+          <label for="cs-cont-si" class="text-sm">SI</label>
+        </div>
+        <div class="flex align-items-center gap-2">
+          <p-radioButton inputId="cs-cont-no" name="contributo"
+                         value="0" [(ngModel)]="form.contributo">
+          </p-radioButton>
+          <label for="cs-cont-no" class="text-sm">NO</label>
+        </div>
+      </div>
+
+      <!-- Riga 2: Documenti -->
+      <div class="col-12 mt-3">
+        <div class="border-1 surface-border border-round p-2 flex flex-column gap-2">
+
+          <!-- Aggiunta documento -->
+          <div class="flex align-items-center gap-2">
+            <p-select [options]="tipiDocumento"
+                      [(ngModel)]="tipoDocSelezionato"
+                      optionLabel="documento"
+                      placeholder="Tipo documento..."
+                      appendTo="body"
+                      [style]="{'width': '420px', 'flex-shrink': '0'}">
+            </p-select>
+            <input #fileInput type="file" class="hidden"
+                   (change)="onFileScelto($event)"/>
+            <p-button [label]="fileSelezionato ? fileSelezionato.name : 'Scegli file'"
+                      icon="pi pi-upload"
+                      severity="secondary" size="small" [outlined]="true"
+                      styleClass="flex-1 overflow-hidden"
+                      [style]="{'min-width': '0', 'text-overflow': 'ellipsis', 'white-space': 'nowrap'}"
+                      (onClick)="fileInput.click()">
+            </p-button>
+            <p-button label="Aggiungi" icon="pi pi-plus" severity="primary" size="small"
+                      [disabled]="!tipoDocSelezionato || !fileSelezionato"
+                      [loading]="saving"
+                      class="ml-auto"
+                      (onClick)="aggiungiDocumento()">
+            </p-button>
+          </div>
+
+          <!-- File in coda (non ancora salvati) -->
+          @if (fileDaAllegare.length > 0) {
+            <div class="border-top-1 surface-border pt-2 flex flex-column gap-1">
+              @for (f of fileDaAllegare; track $index) {
+                <div class="flex align-items-center gap-2 text-sm">
+                  <p-button icon="pi pi-times" [text]="true" severity="danger"
+                            size="small" pTooltip="Rimuovi"
+                            (onClick)="rimuoviDaCoda($index)">
+                  </p-button>
+                  <i class="pi pi-paperclip text-orange-400"></i>
+                  <span class="text-600">{{ f.file.name }}</span>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Documenti salvati -->
+          @if (documentiIter.length > 0) {
+            <div class="border-top-1 surface-border pt-2 flex flex-column gap-1">
+              @for (doc of documentiIter; track $index) {
+                @for (file of doc.assoFiles; track $index) {
+                  <div class="flex align-items-center gap-2 text-sm">
+                    <p-button icon="pi pi-trash" [text]="true" severity="danger"
+                              size="small" pTooltip="Elimina"
+                              (onClick)="eliminaDoc(doc.id_documento)">
+                    </p-button>
+                    <i class="pi pi-file text-primary"></i>
+                    <a class="text-primary no-underline hover:underline cursor-pointer"
+                       (click)="scaricaFile(file.id_file, file.filename)">
+                      {{ file.filename }}
+                    </a>
+                  </div>
+                }
+              }
+            </div>
+          }
+
+        </div>
+      </div>
+
+      <!-- Riga 3: Note -->
+      <div class="col-12 mt-3">
+        <span class="p-float-label">
+          <textarea pInputTextarea id="cs-note"
+                    [(ngModel)]="form.note"
+                    [rows]="3"
+                    class="w-full"
+                    style="resize: vertical;">
+          </textarea>
+          <label for="cs-note">Note</label>
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="flex justify-content-end gap-2 px-3 pb-3">
+    <p-button label="Annulla" icon="pi pi-times" severity="secondary"
+              [outlined]="true" size="small"
+              (onClick)="annulla()">
+    </p-button>
+    <p-button label="Salva" icon="pi pi-save" severity="primary"
+              size="small" [loading]="saving"
+              (onClick)="salva()">
+    </p-button>
+  </div>
+
+</div>
+
+<p-toast></p-toast>

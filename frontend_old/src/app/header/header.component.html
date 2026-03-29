@@ -1,0 +1,26 @@
+<div class="compact ui stackable grid container">
+  
+  	<div class="row" style="padding-bottom:0px;">
+		<div class="sixteen wide column" id="imgHeader" >
+			<img style="float:right; margin-top: 0px; margin-bottom: 0px" src="./assets/{{tenant}}/logo.png">
+			<div style="float:left; margin-top: 10px">
+				<span class="header_1">{{header_1}}</span><br><br>
+				<span class="header_2">{{header_2}}</span>
+			</div>
+		</div>
+	</div>
+
+	<div class="row" style="background-color:#e6e6e6">
+		<div class="five wide column">
+		 	<a href="http://{{sito}}/" target="_self">{{sito}}</a>
+		</div>
+		<div class="center aligned six wide column">
+			<a *ngIf="routeIsActive('/lieti')" routerLink="/"> Ricerca </a>
+		 	<a *ngIf="routeIsActive('/')" routerLink="/lieti" class="ui red label"><i class="heart black icon"></i> Clicca qui per vedere le nostre ADOZIONI felici</a>
+		</div>
+		<div class="right floated right aligned five wide column">
+		 	<a *ngIf="routeIsActive('/')" routerLink="/login"> Login </a>
+		</div>
+	</div>
+
+</div>

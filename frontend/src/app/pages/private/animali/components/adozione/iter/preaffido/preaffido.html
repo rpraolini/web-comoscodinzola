@@ -1,0 +1,180 @@
+<div class="preaffido-panel">
+
+  <!-- Header -->
+  <div class="preaffido-header flex justify-content-between align-items-center px-3 py-2">
+    <span class="font-bold text-sm">PREAFFIDO</span>
+    <div class="flex align-items-center gap-3">
+      @if (iter?.dt_aggiornamento) {
+        <span class="text-xs" style="color: #c0392b">
+          Ultimo aggiornamento il {{ iter.dt_aggiornamento }}
+          @if (iter.account) { da {{ iter.account }} }
+        </span>
+      }
+      @if (iter?.quest_key) {
+        <p-button label="PDF Questionario" icon="pi pi-file-pdf" size="small"
+                  severity="secondary" [outlined]="true"
+                  pTooltip="Scarica il questionario compilato"
+                  (onClick)="apriQuestionarioPdf()">
+        </p-button>
+      }
+    </div>
+  </div>
+
+  <!-- Form -->
+  <div class="p-3">
+    <div class="grid p-fluid">
+
+      <!-- Riga 1: Nome | Località | Volontaria -->
+      <div class="col-4">
+        <span class="p-float-label">
+          <input pInputText id="pf-nome" [(ngModel)]="form.nome" class="w-full"/>
+          <label for="pf-nome">Nome *</label>
+        </span>
+      </div>
+      <div class="col-4">
+        <span class="p-float-label">
+          <input pInputText id="pf-localita" [(ngModel)]="form.localita" class="w-full"/>
+          <label for="pf-localita">Località *</label>
+        </span>
+      </div>
+      <div class="col-4">
+        <span class="p-float-label">
+          <p-autoComplete
+            inputId="pf-volontaria"
+            [(ngModel)]="form.volontaria"
+            [suggestions]="volontarieSuggerite"
+            (completeMethod)="cercaVolontaria($event)"
+            optionLabel="cognome"
+            class="w-full"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+            appendTo="body"
+            [minLength]="2">
+            <ng-template let-c pTemplate="item">
+              <div class="flex flex-column">
+                <span class="font-bold">{{ getNomeContatto(c) }}</span>
+                <small class="text-500">{{ c.desc_provincia }}</small>
+              </div>
+            </ng-template>
+          </p-autoComplete>
+          <label for="pf-volontaria">Volontaria</label>
+        </span>
+      </div>
+
+      <!-- Riga 2: Email | Telefono | Questionario -->
+      <div class="col-4 mt-3">
+        <span class="p-float-label">
+          <input pInputText id="pf-email" [(ngModel)]="form.email" class="w-full"/>
+          <label for="pf-email">Email</label>
+        </span>
+      </div>
+      <div class="col-4 mt-3">
+        <span class="p-float-label">
+          <input pInputText id="pf-telefono" [(ngModel)]="form.telefono"
+                 maxlength="15"
+                 (input)="form.telefono = form.telefono.replace(/[^0-9+]/g, '')"
+                 class="w-full"/>
+          <label for="pf-telefono">Telefono</label>
+        </span>
+      </div>
+      <div class="col-4 mt-3">
+        <span class="p-float-label">
+          <p-select inputId="pf-quest"
+                    [options]="opzioniQuestionario"
+                    [(ngModel)]="form.quest_f"
+                    optionLabel="label"
+                    optionValue="value"
+                    styleClass="w-full"
+                    appendTo="body">
+          </p-select>
+          <label for="pf-quest">Questionario</label>
+        </span>
+      </div>
+
+      <!-- Riga 3: Colloquio fatto da | Data colloquio | Esito -->
+      <div class="col-4 mt-3">
+        <span class="p-float-label">
+          <p-autoComplete
+            inputId="pf-colloquio-da"
+            [(ngModel)]="form.contatto"
+            [suggestions]="colloquioSuggeriti"
+            (completeMethod)="cercaColloquio($event)"
+            optionLabel="cognome"
+            class="w-full"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+            appendTo="body"
+            [minLength]="2">
+            <ng-template let-c pTemplate="item">
+              <div class="flex flex-column">
+                <span class="font-bold">{{ getNomeContatto(c) }}</span>
+                <small class="text-500">{{ c.desc_provincia }}</small>
+              </div>
+            </ng-template>
+          </p-autoComplete>
+          <label for="pf-colloquio-da">Colloquio preaffido fatto da</label>
+        </span>
+        @if (form.colloquio_da?.id_contatto) {
+          <p-button icon="pi pi-times" [text]="true" severity="danger" size="small"
+                    class="mt-1" pTooltip="Rimuovi"
+                    (onClick)="form.colloquio_da = null">
+          </p-button>
+        }
+      </div>
+      <div class="col-4 mt-3">
+        <span class="p-float-label">
+          <p-datepicker inputId="pf-dtcolloquio"
+                        [(ngModel)]="form.dt_colloquio"
+                        dateFormat="dd/mm/yy"
+                        [showIcon]="true"
+                        appendTo="body"
+                        styleClass="w-full">
+          </p-datepicker>
+          <label for="pf-dtcolloquio">Data colloquio</label>
+        </span>
+      </div>
+      <div class="col-4 mt-3">
+        <span class="p-float-label">
+          <p-select inputId="pf-esito"
+                    [options]="opzioniEsito"
+                    [(ngModel)]="form.esito"
+                    optionLabel="label"
+                    optionValue="value"
+                    styleClass="w-full"
+                    appendTo="body">
+          </p-select>
+          <label for="pf-esito">Esito</label>
+        </span>
+      </div>
+
+      <!-- Riga 4: Note -->
+      <div class="col-12 mt-3">
+        <span class="p-float-label">
+          <textarea pInputTextarea id="pf-note"
+                    [(ngModel)]="form.note"
+                    [rows]="3"
+                    class="w-full"
+                    style="resize: vertical;">
+          </textarea>
+          <label for="pf-note">Note</label>
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="flex justify-content-end gap-2 px-3 pb-3">
+    <p-button label="Annulla" icon="pi pi-times" severity="secondary"
+              [outlined]="true" size="small"
+              (onClick)="annulla()">
+    </p-button>
+    <p-button label="Salva" icon="pi pi-save" severity="primary"
+              size="small" [loading]="saving"
+              (onClick)="salva()">
+    </p-button>
+  </div>
+
+</div>
+
+<p-toast></p-toast>

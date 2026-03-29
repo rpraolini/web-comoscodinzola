@@ -1,0 +1,9 @@
+@echo off
+echo Compilazione Angular in corso...
+call ng build --configuration production --base-href /manorg/
+
+echo Pulizia cartella Static di Spring Boot...
+del /s /q "D:\comoscodinzola\gestionale\gestionale-be\core\src\main\resources\static\*.*"
+
+echo Copia dei nuovi file...
+xcopy /s /e /y /I "D:\comoscodinzola\gestionale\gestionale-be\frontend\dist\frontend\browser" "D:\comoscodinzola\gestionale\gestionale-be\core\src\main\resources\static"

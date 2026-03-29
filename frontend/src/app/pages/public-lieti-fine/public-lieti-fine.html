@@ -1,0 +1,81 @@
+<app-public-header></app-public-header>
+
+<div class="surface-ground min-h-screen pb-8">
+    
+    <div class="mx-auto w-full pt-6 px-4 md:px-6" style="max-width: 1400px;">
+        
+        <h1 class="text-900 font-bold text-4xl mb-4 mt-0">Amici a cui abbiamo regalato un lieto fine.</h1>
+        
+        <p class="text-xl text-800 line-height-3 mb-5">
+            Da gennaio 2018 i cani e gatti felici grazie all'adozione sono <span class="text-4xl font-bold text-900 mx-1">{{ totaleAdozioni }}</span>. 
+            Scegliete di adottare e insieme cambieremo il destino di altri animali sfortunati.
+        </p>
+
+        <div class="flex flex-wrap align-items-center gap-3 mb-6 border-bottom-1 surface-border pb-3">
+            <span class="font-bold text-900">Negli anni:</span>
+            
+            <a *ngFor="let stat of statisticheAnni" 
+                class="cursor-pointer font-medium transition-colors transition-duration-200 text-lg"
+                
+                [ngClass]="{
+                    'text-primary border-bottom-2 border-primary': annoSelezionato === stat.value_2, 
+                    'text-blue-600 hover:text-blue-800': annoSelezionato !== stat.value_2
+                }"
+                (click)="selezionaAnno(stat.value_2)">
+                
+                    {{ stat.value_2 }} ({{ stat.value_1 }})
+                </a>
+        </div>
+
+        <div *ngIf="loading" class="flex justify-content-center align-items-center" style="height: 30vh;">
+            <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
+        </div>
+
+        <div *ngIf="!loading" class="grid grid-nogutter">
+            <div class="col-12 sm:col-6 lg:col-3 p-2" *ngFor="let item of animali">
+                
+                <div class="surface-card border-round shadow-1 h-full overflow-hidden hover:shadow-4 transition-duration-200">
+                    
+                    <div class="w-full relative cursor-pointer" 
+                         style="height: 280px; background-color: #000;" 
+                         (click)="apriFoto(item.foto?.url)">
+                         
+                        <img [src]="item.foto?.url || 'assets/dog.jpg'" 
+                             [alt]="item.nome" 
+                             class="w-full h-full opacity-100 hover:opacity-80 transition-opacity transition-duration-200" 
+                             style="object-fit: cover;" />
+                             
+                        <div class="absolute top-0 right-0 p-3 pointer-events-none">
+                            <i class="pi pi-search-plus text-white text-xl" style="text-shadow: 0 2px 4px rgba(0,0,0,0.8);"></i>
+                        </div>
+                    </div>
+
+                    <div class="p-4">
+                        <div class="text-900 font-bold text-xl mb-2">Sono {{ item.nome | uppercase }}</div>
+                        <div class="text-500 font-italic text-sm line-height-3">
+                            {{ getTestoAdozione(item) }}
+                        </div>
+                    </div>
+
+                </div>
+                
+            </div>
+        </div>
+
+        <div *ngIf="!loading && animali.length === 0" class="text-center p-5 text-xl text-600">
+            Nessun amico trovato per questo anno.
+        </div>
+
+    </div>
+</div>
+<div *ngIf="mostraModaleFoto" 
+     class="fixed top-0 left-0 w-screen h-screen flex align-items-center justify-content-center"
+     style="z-index: 9999; background-color: rgba(0,0,0,0.85);"
+     (click)="chiudiFoto()"> <i class="pi pi-times text-white absolute top-0 right-0 m-4 cursor-pointer hover:text-gray-300 transition-colors transition-duration-200" 
+       style="font-size: 2rem;">
+    </i>
+
+    <img [src]="fotoIngrandita" 
+         alt="Lieto fine ingrandito" 
+         style="max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);" 
+         (click)="$event.stopPropagation()" /> </div>

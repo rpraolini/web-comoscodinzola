@@ -1,0 +1,150 @@
+<div class="card shadow-2">
+    <app-public-header></app-public-header>
+</div>
+
+<div class="surface-ground py-5 text-center">
+    <div class="text-4xl font-bold text-900 mb-2">I nostri ospiti</div>
+    <div class="text-600 text-xl">Cerca il tuo futuro amico a quattro zampe tra quelli disponibili.</div>
+</div>
+
+<div class="surface-ground px-4 pb-6">
+    <div class="p-4 shadow-2 border-round bg-white max-w-6 mb-5 mx-auto" style="margin-top: -2rem; min-width: 800px;">
+
+        <div class="grid formgrid p-fluid">
+
+            <div class="col-12 md:col-2">
+                <label class="font-bold block mb-3 text-900">Tipo:</label>
+                <div class="flex flex-column gap-3">
+                    <div *ngFor="let opt of opzioniTipo" class="field-checkbox flex align-items-center">
+                        <p-radioButton [inputId]="opt.value" name="tipo" [value]="opt.value"
+                            [(ngModel)]="filtri.tipo"></p-radioButton>
+                        <label [for]="opt.value" class="ml-2 cursor-pointer text-700">{{ opt.label }}</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-2">
+                <label class="font-bold block mb-3 text-900">Sesso:</label>
+                <div class="flex flex-column gap-3">
+                    <div *ngFor="let opt of opzioniSesso" class="field-checkbox flex align-items-center">
+                        <p-radioButton [inputId]="opt.value" name="sesso" [value]="opt.value"
+                            [(ngModel)]="filtri.sesso"></p-radioButton>
+                        <label [for]="opt.value" class="ml-2 cursor-pointer text-700">{{ opt.label }}</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-8">
+                <div class="grid">
+                    <div class="col-12 md:col-6">
+                        <label class="font-bold block mb-2 text-900">Taglia</label>
+                        <p-select [options]="opzioniTaglia" [(ngModel)]="filtri.taglia" optionLabel="label"
+                            optionValue="value" styleClass="w-full" placeholder="Seleziona"></p-select>
+                    </div>
+                    <div class="col-12 md:col-6">
+                        <label class="font-bold block mb-2 text-900">Età</label>
+                        <p-select [options]="opzioniEta" [(ngModel)]="filtri.eta" optionLabel="label"
+                            optionValue="value" styleClass="w-full" placeholder="Seleziona"></p-select>
+                    </div>
+                </div>
+
+                <div class="grid mt-2">
+
+                    <div class="col-12 md:col-4">
+                        <label class="font-bold block mb-2 text-900">Nazione</label>
+                        <p-select [options]="nazioni" 
+                            [(ngModel)]="filtri.nazione" 
+                            placeholder="Seleziona nazione"
+                            optionLabel="label" 
+                            optionValue="value" styleClass="w-full"
+                            (onChange)="onNazioneChange($event)"> </p-select>
+                    </div>
+
+                    <div class="col-12 md:col-4">
+                        <label class="font-bold block mb-2 text-900">Regione</label>
+                        <p-select [options]="regioni" [(ngModel)]="idRegioneSelezionata" optionLabel="nome"
+                            optionValue="id" placeholder="Qualsiasi regione" styleClass="w-full"
+                            (onChange)="onRegioneChange($event)">
+                        </p-select>
+                    </div>
+
+                    <div class="col-12 md:col-4">
+                        <label class="font-bold block mb-2 text-900">Provincia</label>
+                        <p-select [options]="province" [(ngModel)]="idProvinciaSelezionata" optionLabel="nome"
+                            optionValue="id" placeholder="Qualsiasi provincia" styleClass="w-full"
+                            [disabled]="!idRegioneSelezionata">
+
+                            <ng-template let-prov pTemplate="item">
+                                <div class="flex align-items-center">
+                                    <span>{{ prov.nome }} <span class="text-500 text-sm">({{ prov.sigla
+                                            }})</span></span>
+                                </div>
+                            </ng-template>
+
+                            <ng-template let-prov pTemplate="selectedItem">
+                                <span>{{ prov.nome }} ({{ prov.sigla }})</span>
+                            </ng-template>
+
+                        </p-select>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="flex flex-column md:flex-row align-items-center justify-content-between mt-5 pt-4 border-top-1 surface-border">
+            <div class="text-pink-600 font-bold text-lg mb-3 md:mb-0">
+                <i class="pi pi-heart-fill mr-2"></i> Trovate {{ animali.length }} corrispondenze.
+            </div>
+            <div class="flex gap-2">
+                <p-button label="Cerca" icon="pi pi-search" (onClick)="cerca()"></p-button>
+                <p-button label="Pulisci filtri" icon="pi pi-filter-slash" severity="secondary" [outlined]="true"
+                    (onClick)="resetFiltri()"></p-button>
+            </div>
+        </div>
+    </div>
+
+    <div class="mx-auto w-full px-4 md:px-6" style="max-width: 1400px;">
+
+
+        <div class="card">
+            <div class="grid grid-nogutter">
+                <div class="col-12 sm:col-6 lg:col-4 p-2" *ngFor="let item of animali">
+
+                    <div class="p-4 border-1 surface-border surface-card border-round flex flex-column h-full hover:shadow-4 transition-duration-200 cursor-pointer"
+                        [routerLink]="['/dettaglio', item.id_animale]">
+
+                        <div class="surface-50 flex justify-content-center border-round p-3 relative mb-3 overflow-hidden"
+                            style="height: 250px;">
+                            <img class="border-round w-full h-full"
+                                [src]="item.foto?.url || 'assets/dog.jpg'" [alt]="item.nome"
+                                style="object-fit: cover;" />
+
+                            <p-tag [value]="item.descr_stato" [severity]="getSeverity(item)" class="absolute"
+                                [style.left.px]="10" [style.top.px]="10"></p-tag>
+                        </div>
+
+                        <div class="flex justify-content-between align-items-center mb-2">
+                            <span class="text-900 font-bold text-xl">{{ item.nome }}</span>
+                            <span>
+                                <i class="pi"
+                                    [ngClass]="{'pi-mars text-blue-500': item.sesso === 'M', 'pi-venus text-pink-500': item.sesso === 'F'}"></i>
+                            </span>
+                        </div>
+
+                        <div class="text-600 mb-3">{{ item.razza || 'Meticcio' }}</div>
+
+                        <p-button label="Dettagli" icon="pi pi-search" styleClass="w-full" [outlined]="true"
+                            [routerLink]="['/dettaglio', item.id_animale]"></p-button>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="animali.length === 0" class="text-center p-5 text-xl">
+                Nessun amico trovato con questi filtri.
+            </div>
+
+        </div>
+    </div>
+</div>

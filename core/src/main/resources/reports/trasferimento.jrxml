@@ -1,0 +1,991 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final utlizzo versione della libreria JasperReports6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="trasferimento" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="438693be-d045-4cc1-8000-4cd615858955">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="mysql-asso"/>
+	<parameter name="id" class="java.lang.String"/>
+	<parameter name="url_stemma" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[Select
+    v.nome,
+    v.etaS,
+    v.dt_nascita,
+    v.num_microchip,
+    v.peso,
+    v.taglia,
+    v.descr_colore,
+    v.sesso,
+    IfNull(Concat(IfNull(v.tipo_razza, ""), " ", v.razza), "METICCIO") razza,
+    v.id_animale,
+    i.id_tipo_iter,
+    v.caratteristiche,
+    v.sterilizzato,
+    Concat(p_c.cognome, " ", p_c.nome) As proprietario,
+    p_c.regione As p_regione,
+    Concat(p_c.comune, " (", p_p.sigla_automobilistica, ")") p_residenza,
+    p_c.indirizzo As p_indirizzo,
+    p_c.email As p_email,
+    Concat(IfNull(p_c.telefono_1, ""), " ", IfNull(p_c.telefono_2, ""), " ", IfNull(p_c.cellulare, "")) As p_telefono,
+    p_c.nato_a As p_nato_a,
+    Date_Format(IfNull(p_c.data_nascita, ''), '%d/%m/%Y') As p_data_nascita,
+    p_c.cod_fiscale As p_cod_fiscale,
+    p_c.num_documento As p_num_documento,
+    p_d.documento As p_documento,
+    Concat(ad.cognome, " ", ad.nome) As adottante,
+    ad.regione As ad_regione,
+    Concat(ad.comune, " (", ad_p.sigla_automobilistica, ")") ad_residenza,
+    ad.indirizzo As ad_indirizzo,
+    ad.email As ad_email,
+    Concat(IfNull(ad.telefono_1, ""), " ", IfNull(ad.telefono_2, ""), " ", IfNull(ad.cellulare, "")) As ad_telefono,
+    ad.nato_a As ad_nato_a,
+    Date_Format(IfNull(ad.data_nascita, ''), '%d/%m/%Y') As ad_data_nascita,
+    ad.cod_fiscale As ad_cod_fiscale,
+    ad.num_documento As ad_num_documento,
+    ad_d.documento As ad_documento,
+    v.descr_tipo_animale,
+    i.id_pratica,
+    st.macro_stato
+From
+    v_animali v Left Join
+    an_r_iter i On i.id_animale = v.id_animale Left Join
+    an_contatti ad On i.id_contatto_adottante = ad.id_contatto Left Join
+    an_x_province ad_p On ad_p.id = ad.id_provincia Left Join
+    an_x_tipo_documento ad_d On ad_d.id_tipo_documento = ad.id_tipo_documento Left Join
+    v_animali_proprietario p_c On p_c.id_animale = v.id_animale Left Join
+    an_x_tipo_documento p_d On p_d.id_tipo_documento = p_c.id_tipo_documento Left Join
+    an_x_province p_p On p_p.id = p_c.id_provincia Left Join
+    as_pratiche pr On i.id_pratica = pr.id_pratica Inner Join
+    as_x_stati st On pr.id_stato = st.id_stato_p
+Where
+    v.id_animale = $P{id} And
+    i.id_tipo_iter = 4 and
+    st.macro_stato = 'ATTIVO'
+]]>
+	</queryString>
+	<field name="nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nome"/>
+		<property name="com.jaspersoft.studio.field.label" value="nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_animale"/>
+	</field>
+	<field name="etaS" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="etaS"/>
+		<property name="com.jaspersoft.studio.field.label" value="etaS"/>
+	</field>
+	<field name="dt_nascita" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="dt_nascita"/>
+		<property name="com.jaspersoft.studio.field.label" value="dt_nascita"/>
+	</field>
+	<field name="num_microchip" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="num_microchip"/>
+		<property name="com.jaspersoft.studio.field.label" value="num_microchip"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_animale"/>
+	</field>
+	<field name="peso" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="peso"/>
+		<property name="com.jaspersoft.studio.field.label" value="peso"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_animale"/>
+	</field>
+	<field name="taglia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="taglia"/>
+		<property name="com.jaspersoft.studio.field.label" value="taglia"/>
+	</field>
+	<field name="descr_colore" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="descr_colore"/>
+		<property name="com.jaspersoft.studio.field.label" value="descr_colore"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_x_colore"/>
+	</field>
+	<field name="sesso" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="sesso"/>
+		<property name="com.jaspersoft.studio.field.label" value="sesso"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_animale"/>
+	</field>
+	<field name="razza" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="razza"/>
+		<property name="com.jaspersoft.studio.field.label" value="razza"/>
+	</field>
+	<field name="id_animale" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id_animale"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_animale"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_animale"/>
+	</field>
+	<field name="id_tipo_iter" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id_tipo_iter"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_tipo_iter"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_r_iter"/>
+	</field>
+	<field name="caratteristiche" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="caratteristiche"/>
+		<property name="com.jaspersoft.studio.field.label" value="caratteristiche"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_animale"/>
+	</field>
+	<field name="sterilizzato" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="sterilizzato"/>
+		<property name="com.jaspersoft.studio.field.label" value="sterilizzato"/>
+	</field>
+	<field name="proprietario" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="proprietario"/>
+		<property name="com.jaspersoft.studio.field.label" value="proprietario"/>
+	</field>
+	<field name="p_regione" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="regione"/>
+		<property name="com.jaspersoft.studio.field.label" value="p_regione"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="p_residenza" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="p_residenza"/>
+		<property name="com.jaspersoft.studio.field.label" value="p_residenza"/>
+	</field>
+	<field name="p_indirizzo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="indirizzo"/>
+		<property name="com.jaspersoft.studio.field.label" value="p_indirizzo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="p_email" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="email"/>
+		<property name="com.jaspersoft.studio.field.label" value="p_email"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="p_telefono" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="p_telefono"/>
+		<property name="com.jaspersoft.studio.field.label" value="p_telefono"/>
+	</field>
+	<field name="p_nato_a" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nato_a"/>
+		<property name="com.jaspersoft.studio.field.label" value="p_nato_a"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="p_data_nascita" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="p_data_nascita"/>
+		<property name="com.jaspersoft.studio.field.label" value="p_data_nascita"/>
+	</field>
+	<field name="p_cod_fiscale" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cod_fiscale"/>
+		<property name="com.jaspersoft.studio.field.label" value="p_cod_fiscale"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="p_num_documento" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="num_documento"/>
+		<property name="com.jaspersoft.studio.field.label" value="p_num_documento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="p_documento" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="documento"/>
+		<property name="com.jaspersoft.studio.field.label" value="p_documento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_x_tipo_documento"/>
+	</field>
+	<field name="adottante" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="adottante"/>
+		<property name="com.jaspersoft.studio.field.label" value="adottante"/>
+	</field>
+	<field name="ad_regione" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="regione"/>
+		<property name="com.jaspersoft.studio.field.label" value="ad_regione"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="ad_residenza" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="ad_residenza"/>
+		<property name="com.jaspersoft.studio.field.label" value="ad_residenza"/>
+	</field>
+	<field name="ad_indirizzo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="indirizzo"/>
+		<property name="com.jaspersoft.studio.field.label" value="ad_indirizzo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="ad_email" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="email"/>
+		<property name="com.jaspersoft.studio.field.label" value="ad_email"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="ad_telefono" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="ad_telefono"/>
+		<property name="com.jaspersoft.studio.field.label" value="ad_telefono"/>
+	</field>
+	<field name="ad_nato_a" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nato_a"/>
+		<property name="com.jaspersoft.studio.field.label" value="ad_nato_a"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="ad_data_nascita" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="ad_data_nascita"/>
+		<property name="com.jaspersoft.studio.field.label" value="ad_data_nascita"/>
+	</field>
+	<field name="ad_cod_fiscale" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cod_fiscale"/>
+		<property name="com.jaspersoft.studio.field.label" value="ad_cod_fiscale"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="ad_num_documento" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="num_documento"/>
+		<property name="com.jaspersoft.studio.field.label" value="ad_num_documento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_contatti"/>
+	</field>
+	<field name="ad_documento" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="documento"/>
+		<property name="com.jaspersoft.studio.field.label" value="ad_documento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_x_tipo_documento"/>
+	</field>
+	<field name="descr_tipo_animale" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="descr_tipo_animale"/>
+		<property name="com.jaspersoft.studio.field.label" value="descr_tipo_animale"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_x_tipo_animale"/>
+	</field>
+	<field name="id_pratica" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="id_pratica"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_pratica"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="an_r_iter"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="macro_stato" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="macro_stato"/>
+		<property name="com.jaspersoft.studio.field.label" value="macro_stato"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="as_x_stati"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="101" splitType="Stretch">
+			<staticText>
+				<reportElement x="180" y="12" width="140" height="40" uuid="707b398b-6b1a-4c30-bee4-4e74b388e9a3"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Regione Campania
+Assessorato alla Sanità
+Settore Veterinario
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="180" y="52" width="140" height="30" uuid="f39e90f7-746b-4fe6-8b82-f8b650c59b20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="18" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Anagrafe Canina]]></text>
+			</staticText>
+			<image>
+				<reportElement x="20" y="0" width="60" height="80" uuid="21908cc0-921b-48ea-a3d2-4ae66ae4fed5"/>
+				<imageExpression><![CDATA[$P{url_stemma}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="80" width="110" height="15" uuid="02e40288-887a-4584-90bb-16b5edd16ceb"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[Regione Campania]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="484" y="15" width="70" height="30" uuid="34f54786-7166-46e9-8d25-41f10adfc5f4"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<text><![CDATA[MODULO
+TRASFERIMENTO PROPRIETA’
+]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="96" width="555" height="1" uuid="f4a470a4-3c73-43e5-a42e-9ffa6e556f80"/>
+				<graphicElement>
+					<pen lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+		</band>
+	</title>
+	<detail>
+		<band height="635" splitType="Stretch">
+			<staticText>
+				<reportElement x="330" y="0" width="72" height="19" uuid="35b4fcb7-7959-494c-b1a2-63cab3ff6d9b"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[A.S.L : BN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-1" y="11" width="70" height="15" uuid="96d9cbfe-591f-4967-a11e-8edf232ca13a"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[Il sottoscritto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="354" y="32" width="70" height="15" uuid="6c80dfca-6bce-4353-829a-a993144a2190"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[codice fiscale]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="32" width="30" height="15" uuid="b9580226-b0a9-49d4-87f6-01ec90019acb"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[nato a]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="281" y="32" width="10" height="15" uuid="1d8ec834-83b1-46c2-92d2-a9c1a71490c4"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[il]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="69" y="11" width="211" height="15" uuid="328d0f01-8d71-4a14-972e-1800a5d8c640"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{proprietario}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="34" y="32" width="244" height="15" uuid="3a52cbcf-db8a-4779-9ea8-d1452b80bd1b"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{p_nato_a}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="294" y="32" width="57" height="15" uuid="ace38c9a-2d0a-4f7d-9ee1-69fa5d0c4b85"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{p_data_nascita}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="428" y="32" width="127" height="15" uuid="e304eb93-6ac2-4da3-98fd-57755e0fdcd6"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{p_cod_fiscale}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-1" y="52" width="60" height="15" uuid="ad3eeb5b-3bda-49e9-9508-5838d07e517d"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[residente a]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-1" y="73" width="20" height="15" uuid="80df1efc-1a26-4340-a40c-af7c08fae608"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[tel.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="245" y="52" width="30" height="15" uuid="9e7c2b14-640a-4d1a-8199-5beffefc738e"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[via]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="59" y="52" width="186" height="15" uuid="cb590833-1d0a-4707-a75f-a08ede4ea0af"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{p_residenza}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="276" y="52" width="278" height="15" uuid="bc53fd33-4c57-4a39-aadc-769e39a123a1"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{p_indirizzo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="20" y="73" width="115" height="15" uuid="cd359114-86b3-415c-afb3-50d0bcbdb98d"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{p_telefono}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="97" width="148" height="15" uuid="5ca3f90c-2cf6-41b2-a2b5-bdad7785407b"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[(documento di riconoscimento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="535" y="97" width="20" height="15" uuid="afb78697-a80a-4632-85ff-6926855e3921"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="297" y="97" width="11" height="15" uuid="3194697a-8359-4235-aad0-94475395d2b1"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[n°]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="153" y="97" width="139" height="15" uuid="69258f34-c2cc-41e7-aee8-33f09dcf7ef9"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{p_documento}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="313" y="97" width="215" height="15" uuid="ba09ba2f-2e68-4b3e-b212-e0f8d8c2aec5"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{p_num_documento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="120" width="160" height="15" uuid="66fa62ea-4137-4428-a2ab-cadfc060ee0a"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[legale rappresentante della ditta :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="161" y="120" width="391" height="15" uuid="8ab95c7a-6aaa-4630-9031-7fa971751d75"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+			</textField>
+			<staticText>
+				<reportElement x="-1" y="141" width="200" height="15" uuid="f70f7b8f-cb0e-4ad9-bf92-7f61ac6e28ed"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[sita nell'ambito di codesta A.S.L. alla via]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="200" y="141" width="353" height="15" uuid="cac12d09-26e6-445f-832e-7a3a9ac53849"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="160" width="79" height="15" uuid="3dbc39dc-11e6-4353-9f08-b283d2ca8d00"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[del comune di]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="80" y="160" width="473" height="15" uuid="d28f9bf1-5548-4724-b9ae-2074f812ce13"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="185" width="50" height="15" uuid="7303338f-823a-49e1-99a7-ea33f22a0e84"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[partita iva]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="54" y="185" width="170" height="15" uuid="b196d912-e0b3-4d60-a1d9-2f16998a46dd"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="206" width="38" height="15" uuid="a11bf11c-4dbf-4731-96a7-1fb5e8a9847b"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[razza]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="51" y="206" width="199" height="15" uuid="dd42271c-c663-4069-82a8-c6245d71d2a4"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{razza}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="261" y="206" width="49" height="15" uuid="e7d65783-7f7a-4fd8-a3ab-d82e0fcc8b0e"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[mantello]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="312" y="206" width="234" height="15" uuid="55ef4c61-d049-497a-8263-2ad2c52c1560"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descr_colore}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="226" width="38" height="15" uuid="9d74c599-1d8f-4f21-adae-fb6666086121"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[sesso]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="51" y="226" width="199" height="15" uuid="ad0d2bed-321d-4e61-b778-e89e35fa00be"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sesso}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="261" y="226" width="49" height="15" uuid="1d5d929d-8c51-4c31-800c-3d6364d2f955"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[taglia]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="312" y="226" width="234" height="15" uuid="f34c38a9-1f2e-474e-b1d4-e220ae37d842"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{taglia}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="246" width="38" height="15" uuid="2379df60-c4af-4c34-869c-1f341c4de41e"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[età]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="51" y="246" width="199" height="15" uuid="d751efe0-c788-4585-ae37-5ceb8b3fdc3f"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dt_nascita}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="261" y="246" width="49" height="15" uuid="d44839ef-d88d-4e9f-91f0-f60c7c894c54"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[microchip]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="312" y="246" width="234" height="15" uuid="bb76bedc-ed60-4bae-a4f1-73b7339b3f2a"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{num_microchip}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="268" width="38" height="15" uuid="fea26d5e-2b75-415b-9468-58d14e972d05"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[nome]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="51" y="268" width="199" height="15" uuid="5da6e36e-f6c1-4133-b6a6-86017ed726be"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="230" y="292" width="70" height="20" uuid="17b49152-4147-428e-975b-4c2ef537e30a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DICHIARA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="320" width="110" height="15" uuid="8e54d2f3-7f1a-48cd-b6c3-62e8e0cf3afe"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[di aver ceduto in data]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="115" y="320" width="70" height="15" uuid="d93e879c-e5ae-4944-a701-bc53b99e371f"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="348" y="320" width="196" height="15" uuid="e896454d-1026-4966-ada5-3986c4da5965"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{adottante}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="342" width="39" height="15" uuid="75ddecb0-2db9-4d4b-994d-3a67c137fd24"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[nato a]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="39" y="342" width="221" height="15" uuid="8a7863e6-470a-41d1-b5f9-69b1c1acf7e0"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ad_nato_a}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="260" y="342" width="20" height="15" uuid="ed383f45-c09c-4110-9ce3-5fdd1987901a"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[il]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="280" y="342" width="68" height="15" uuid="db5b2a7c-683e-4f4a-8f87-9b255cc8bc2b"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ad_data_nascita}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="348" y="342" width="72" height="15" uuid="6bdf2d57-729c-4949-8e72-3604e98537bb"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[codice fiscale]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="424" y="342" width="119" height="15" uuid="b9a49fee-05d5-4efb-9b7b-0e341e1a2834"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ad_cod_fiscale}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="365" width="60" height="15" uuid="963d8384-a58c-4dba-b37c-cae6a674fd48"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[residente a]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="61" y="365" width="199" height="15" uuid="8f1e9464-692f-44ea-968c-abf4d5223d4e"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ad_residenza}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="261" y="365" width="30" height="15" uuid="0a0f6305-1f4c-4179-8953-a187cfb0b7ed"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[via]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="292" y="365" width="251" height="15" uuid="1cf57425-e3f7-4916-b518-8b194e828bef"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ad_indirizzo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="390" width="19" height="15" uuid="d1cc592b-ecb5-4494-825f-7ac6b619ab89"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[tel]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="20" y="390" width="199" height="15" uuid="06eb3b37-2025-4611-bd96-de05af6ba259"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ad_telefono}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="414" width="148" height="15" uuid="aefabe53-1d63-4d42-8d92-d2a85d326d85"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[(documento di riconoscimento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="535" y="413" width="20" height="15" uuid="cd6cb405-0750-4923-bb8c-a8d79fc38420"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="435" width="160" height="15" uuid="56bb2dcc-df00-4221-a5f2-48ecff1c4d79"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[legale rappresentante della ditta :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="160" y="435" width="158" height="15" uuid="7cdea1d2-0b10-4dbc-b7fb-4f16846434ea"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+			</textField>
+			<staticText>
+				<reportElement x="320" y="435" width="234" height="15" uuid="8a0173f5-34fe-4116-bc68-a043e6ca6262"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[sita nell'ambito di codesta A.S.L. alla via alla via ]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="458" width="170" height="15" uuid="18949b00-c732-4f0a-8fdd-d80d23c15acc"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+			</textField>
+			<staticText>
+				<reportElement x="173" y="457" width="67" height="15" uuid="c11bdd09-e715-4bbc-9edf-5f0ea5ca67e8"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[del comune di]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="237" y="457" width="170" height="15" uuid="105a4949-6783-449c-9f93-e27d26618909"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+			</textField>
+			<staticText>
+				<reportElement x="407" y="457" width="50" height="15" uuid="b884d786-bebc-48a2-a683-e8941abc1caa"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[partita iva]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="457" y="457" width="98" height="15" uuid="b22c94b8-88a9-417b-9613-47fc8453c51e"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="488" width="555" height="15" uuid="1d8ea44a-4cb8-46ad-a06c-368c6af41c61"/>
+				<textElement>
+					<font fontName="Arial" size="11" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[DOCUMENTI ALLEGATI:  copia del documento di identità e codice fiscale del nuovo proprietario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="566" width="555" height="15" uuid="ff70112d-7c53-4bb8-b9d7-eddd48f3a1e7"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Si autorizza il trattamento dei dati personali ai sensi del G.D.P.R. 679/2016 e del D.L.vo 101 del 10 agosto 2018]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="33" y="514" width="120" height="15" uuid="eabbef33-970c-482a-87a3-d3842bc63603"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[IL I° PROPRIETARIO	]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="395" y="514" width="115" height="15" uuid="8ae0ee78-5a33-48cb-a4af-c84aeb7ce65e"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[IL II° PROPRIETARIO	]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="395" y="540" width="114" height="15" uuid="d46ddc91-88dd-410e-b83a-280d84ef4cf3"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="33" y="540" width="114" height="15" uuid="ce77c0cf-5cd4-4dc3-8c0f-87f0aae2b290"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+			</textField>
+			<staticText>
+				<reportElement x="33" y="586" width="103" height="15" uuid="526ad79c-b8b7-4a11-b8c9-e757c046234b"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[firma]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="395" y="586" width="115" height="15" uuid="99b46538-b7d9-4c01-ac07-64c55b0ad9ae"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[firma]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="395" y="615" width="114" height="15" uuid="0473abf6-38c0-4ba7-a577-1f8a196f089c"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="33" y="615" width="114" height="15" uuid="883a3076-1943-4cb6-80b5-ef5cb5b8dc1c"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="149" y="413" width="136" height="15" uuid="a2d44827-5679-4ac8-b876-27f97ba10dfd"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ad_documento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="288" y="413" width="11" height="15" uuid="dc184d42-29d8-4f84-bc3e-340bd8d433f9"/>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[n°]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="308" y="413" width="227" height="15" uuid="a024dcf9-ea89-4fc6-8112-d002cd5be8e3"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ad_num_documento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="237" y="185" width="315" height="15" uuid="6376845f-5fb7-4377-81db-9bb48f141ad7"/>
+				<textFieldExpression><![CDATA[CONCATENATE("in qualità di proprietario del ", LOWER($F{descr_tipo_animale}), " :" )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="189" y="320" width="151" height="15" uuid="a468ada5-3bcc-448a-b2d0-df3322ef5ff8"/>
+				<textFieldExpression><![CDATA[CONCATENATE("il ", LOWER($F{descr_tipo_animale}), " di cui sopra al signor" )]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="380" y="615" width="15" height="15" uuid="3e883ac9-3c1d-4a15-9ed2-091775bd707e"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[X]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="540" width="15" height="15" uuid="0ddb35cb-2c75-4b9e-8594-8153a56aae71"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[X]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

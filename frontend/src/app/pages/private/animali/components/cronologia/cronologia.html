@@ -1,0 +1,82 @@
+<div class="grid p-fluid">
+
+    <!-- PROPRIETARIO -->
+    <div class="col-12">
+        <div class="surface-card p-4 shadow-2 border-round mb-3">
+            <div class="text-900 font-bold text-lg mb-3 border-bottom-1 surface-border pb-2">
+                <i class="pi pi-user mr-2 text-primary"></i>Proprietario attuale
+            </div>
+
+            @if (proprietario) {
+            <div class="flex align-items-center gap-3">
+                <div class="border-circle bg-green-500 flex-shrink-0" style="width: 12px; height: 12px;"></div>
+                <div class="flex flex-column">
+                    <span class="font-bold text-900">{{getNomeProprietario()}}</span>
+                    <small class="text-500">
+                        @if (proprietario.dt_proprietario) {
+                        <i class="pi pi-calendar mr-1"></i>dal {{proprietario.dt_proprietario}}
+                        &nbsp;·&nbsp;
+                        }
+                        @if (proprietario.desc_provincia) {
+                        <i class="pi pi-map-marker mr-1"></i>{{proprietario.desc_provincia}}
+                        }
+                        @if (proprietario.telefono_1) {
+                        &nbsp;·&nbsp;<i class="pi pi-phone mr-1"></i>{{proprietario.telefono_1}}
+                        }
+                    </small>
+                </div>
+            </div>
+            } @else {
+            <span class="text-500 font-italic text-sm">Nessun proprietario registrato.</span>
+            }
+
+        </div>
+    </div>
+
+    <!-- ATTIVITÀ -->
+    <div class="col-12">
+        <div class="surface-card p-4 shadow-2 border-round">
+            <div class="text-900 font-bold text-lg mb-3 border-bottom-1 surface-border pb-2">
+                <i class="pi pi-list mr-2 text-primary"></i>Attività
+            </div>
+
+            <p-table [value]="attivita" [loading]="loading" [rowHover]="true"
+                styleClass="p-datatable-sm p-datatable-striped" [paginator]="attivita.length > 20" [rows]="20">
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 200px">Data</th>
+                        <th>Attività</th>
+                        <th style="width: 150px">Account</th>
+                        <th style="width: 200px">Note</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-row>
+                    <tr>
+                        <td class="text-500 text-sm">
+                            <i class="pi pi-calendar mr-1"></i>{{row.dt_attivita}}
+                        </td>
+                        <td class="font-medium text-primary">{{row.descr_attivita}}</td>
+                        <td class="text-700">{{row.account}}</td>
+                        <td class="text-500 text-sm font-italic">{{row.note_attivita || '—'}}</td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="4">
+                            <div class="text-center p-5 text-500">
+                                <i class="pi pi-list text-300 text-4xl mb-3 block"></i>
+                                <span class="text-sm">Nessuna attività registrata.</span>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+            </p-table>
+
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,32 @@
+<div class="flex flex-column min-h-screen">
+    
+    <app-public-header></app-public-header>
+
+    <div class="flex-grow-1 flex align-items-center justify-content-center bg-blue-50">
+        
+        <p-card header="Benvenuto" subheader="Gestionale Asso" [style]="{ width: '400px' }" styleClass="shadow-4">
+            <ng-template pTemplate="header">
+              <div style="height: 10px; background: var(--primary-color); border-radius: 6px 6px 0 0;"></div>
+            </ng-template>
+            
+            <form (ngSubmit)="login()">
+                <div class="flex flex-column gap-3 p-3">
+                  <div class="field">
+                    <label for="username" class="block mb-2 font-bold">Nome Utente</label>
+                    <input pInputText id="username" name="username" [(ngModel)]="username" class="w-full" />
+                  </div>
+            
+                  <div class="field">
+                    <label for="password" class="block mb-2 font-bold">Password</label>
+                    <p-password id="password" name="password" [(ngModel)]="password" [feedback]="false" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full"></p-password>
+                  </div>
+            
+                  <p-message *ngIf="errorMessage" severity="error" text="Credenziali non valide" styleClass="w-full block mb-3"></p-message>
+            
+                  <p-button label="Accedi" icon="pi pi-user" type="submit" [loading]="loading" styleClass="w-full"></p-button>
+                </div>
+            </form>
+        </p-card>
+
+    </div>
+</div>
