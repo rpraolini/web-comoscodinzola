@@ -53,3 +53,7 @@ gestionale-be_old/
 
 ### JAR ###
 *.jar
+
+### Logs ###
+logs/
+*.log
